@@ -545,6 +545,81 @@ async def put_anomaly_detector_tool(
         raise
 
 
+# Tag API implementations
+@mcp.tool(name='list_tags_for_resource')
+async def list_tags_for_resource_tool(
+    ctx: Context,
+    resource_arn: str = Field(
+        ...,
+        description='The ARN of the CloudWatch resource.',
+    ),
+):
+    """Lists the tags for a CloudWatch resource."""
+    try:
+        response = cloudwatch_client.list_tags_for_resource(
+            ResourceARN=resource_arn
+        )
+        return {
+            "tags": response.get('Tags', [])
+        }
+    except Exception as e:
+        logger.error(f'Error in list_tags_for_resource_tool: {str(e)}')
+        await ctx.error(f'Error listing tags for resource: {str(e)}')
+        raise
+
+
+@mcp.tool(name='tag_resource')
+async def tag_resource_tool(
+    ctx: Context,
+    resource_arn: str = Field(
+        ...,
+        description='The ARN of the CloudWatch resource.',
+    ),
+    tags: List[Dict[str, str]] = Field(
+        ...,
+        description='The list of tags to add to the resource. Each tag is a dictionary with "Key" and "Value" keys.',
+    ),
+):
+    """Adds or modifies tags for a CloudWatch resource."""
+    try:
+        cloudwatch_client.tag_resource(
+            ResourceARN=resource_arn,
+            Tags=tags
+        )
+        logger.info(f'Successfully tagged resource: {resource_arn}')
+        return {"status": f"Successfully tagged resource: {resource_arn}"}
+    except Exception as e:
+        logger.error(f'Error in tag_resource_tool: {str(e)}')
+        await ctx.error(f'Error tagging resource: {str(e)}')
+        raise
+
+
+@mcp.tool(name='untag_resource')
+async def untag_resource_tool(
+    ctx: Context,
+    resource_arn: str = Field(
+        ...,
+        description='The ARN of the CloudWatch resource.',
+    ),
+    tag_keys: List[str] = Field(
+        ...,
+        description='The list of tag keys to remove from the resource.',
+    ),
+):
+    """Removes tags from a CloudWatch resource."""
+    try:
+        cloudwatch_client.untag_resource(
+            ResourceARN=resource_arn,
+            TagKeys=tag_keys
+        )
+        logger.info(f'Successfully untagged resource: {resource_arn}')
+        return {"status": f"Successfully untagged resource: {resource_arn}"}
+    except Exception as e:
+        logger.error(f'Error in untag_resource_tool: {str(e)}')
+        await ctx.error(f'Error untagging resource: {str(e)}')
+        raise
+
+
 def main():
     """Run the MCP server."""
     mcp.run()
