@@ -396,6 +396,155 @@ async def put_dashboard_tool(
         raise
 
 
+# Anomaly Detector API implementations
+@mcp.tool(name='delete_anomaly_detector')
+async def delete_anomaly_detector_tool(
+    ctx: Context,
+    namespace: str = Field(
+        ...,
+        description='The namespace of the metric.',
+    ),
+    metric_name: str = Field(
+        ...,
+        description='The name of the metric.',
+    ),
+    dimensions: Optional[List[Dict[str, str]]] = Field(
+        None,
+        description='The dimensions of the metric. Each dimension is a dictionary with "Name" and "Value" keys.',
+    ),
+    stat: Optional[str] = Field(
+        None,
+        description='The statistic of the metric.',
+    ),
+    single_metric_anomaly_detector: Optional[Dict] = Field(
+        None,
+        description='A single metric anomaly detector to delete.',
+    ),
+    metric_math_anomaly_detector: Optional[Dict] = Field(
+        None,
+        description='A metric math anomaly detector to delete.',
+    ),
+):
+    """Deletes the specified anomaly detection model."""
+    try:
+        kwargs = {
+            'Namespace': namespace,
+            'MetricName': metric_name,
+            'Dimensions': dimensions,
+            'Stat': stat,
+            'SingleMetricAnomalyDetector': single_metric_anomaly_detector,
+            'MetricMathAnomalyDetector': metric_math_anomaly_detector,
+        }
+        cloudwatch_client.delete_anomaly_detector(**remove_null_values(kwargs))
+        logger.info(f'Successfully deleted anomaly detector for {namespace}:{metric_name}')
+        return {"status": f"Successfully deleted anomaly detector for {namespace}:{metric_name}"}
+    except Exception as e:
+        logger.error(f'Error in delete_anomaly_detector_tool: {str(e)}')
+        await ctx.error(f'Error deleting anomaly detector: {str(e)}')
+        raise
+
+
+@mcp.tool(name='describe_anomaly_detectors')
+async def describe_anomaly_detectors_tool(
+    ctx: Context,
+    namespace: Optional[str] = Field(
+        None,
+        description='The namespace of the metric.',
+    ),
+    metric_name: Optional[str] = Field(
+        None,
+        description='The name of the metric.',
+    ),
+    dimensions: Optional[List[Dict[str, str]]] = Field(
+        None,
+        description='The dimensions of the metric. Each dimension is a dictionary with "Name" and "Value" keys.',
+    ),
+    stat: Optional[str] = Field(
+        None,
+        description='The statistic of the metric.',
+    ),
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
+    max_results: Optional[int] = Field(
+        None,
+        description='The maximum number of results to return.',
+    ),
+):
+    """Lists the anomaly detection models that you have created."""
+    try:
+        kwargs = {
+            'Namespace': namespace,
+            'MetricName': metric_name,
+            'Dimensions': dimensions,
+            'Stat': stat,
+            'NextToken': next_token,
+            'MaxResults': max_results,
+        }
+        response = cloudwatch_client.describe_anomaly_detectors(**remove_null_values(kwargs))
+        return {
+            "anomalyDetectors": response.get('AnomalyDetectors', []),
+            "nextToken": response.get('NextToken')
+        }
+    except Exception as e:
+        logger.error(f'Error in describe_anomaly_detectors_tool: {str(e)}')
+        await ctx.error(f'Error describing anomaly detectors: {str(e)}')
+        raise
+
+
+@mcp.tool(name='put_anomaly_detector')
+async def put_anomaly_detector_tool(
+    ctx: Context,
+    namespace: str = Field(
+        ...,
+        description='The namespace of the metric.',
+    ),
+    metric_name: str = Field(
+        ...,
+        description='The name of the metric.',
+    ),
+    dimensions: Optional[List[Dict[str, str]]] = Field(
+        None,
+        description='The dimensions of the metric. Each dimension is a dictionary with "Name" and "Value" keys.',
+    ),
+    stat: Optional[str] = Field(
+        None,
+        description='The statistic of the metric.',
+    ),
+    configuration: Optional[Dict] = Field(
+        None,
+        description='The configuration for the anomaly detection model.',
+    ),
+    single_metric_anomaly_detector: Optional[Dict] = Field(
+        None,
+        description='A single metric anomaly detector to create or update.',
+    ),
+    metric_math_anomaly_detector: Optional[Dict] = Field(
+        None,
+        description='A metric math anomaly detector to create or update.',
+    ),
+):
+    """Creates or updates an anomaly detection model for a CloudWatch metric."""
+    try:
+        kwargs = {
+            'Namespace': namespace,
+            'MetricName': metric_name,
+            'Dimensions': dimensions,
+            'Stat': stat,
+            'Configuration': configuration,
+            'SingleMetricAnomalyDetector': single_metric_anomaly_detector,
+            'MetricMathAnomalyDetector': metric_math_anomaly_detector,
+        }
+        cloudwatch_client.put_anomaly_detector(**remove_null_values(kwargs))
+        logger.info(f'Successfully created or updated anomaly detector for {namespace}:{metric_name}')
+        return {"status": f"Successfully created or updated anomaly detector for {namespace}:{metric_name}"}
+    except Exception as e:
+        logger.error(f'Error in put_anomaly_detector_tool: {str(e)}')
+        await ctx.error(f'Error creating or updating anomaly detector: {str(e)}')
+        raise
+
+
 def main():
     """Run the MCP server."""
     mcp.run()
