@@ -37,7 +37,7 @@ from typing import Dict, List, Optional, Union
 
 mcp = FastMCP(
     'awslabs.cloudwatch-metrics-mcp-server',
-    instructions='Use this MCP server to run read-only commands and analyze CloudWatch Metrics. Supports retrieving metric data using the GetMetricData API. With CloudWatch Metrics, you can monitor your AWS resources and applications in real-time, set alarms, and visualize metrics to help you respond to operational issues.',
+    instructions='Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports retrieving metric data, managing dashboards, and working with CloudWatch alarms. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, and visualize metrics to help you respond to operational issues.',
     dependencies=[
         'pydantic',
         'loguru',
@@ -243,7 +243,7 @@ async def get_metric_statistics_tool(
     ),
     unit: Optional[str] = Field(
         None,
-        description='The unit for the metric. Valid values include Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes, Bits, Kilobits, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second, Gigabytes/Second, Terabytes/Second, Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, None.',
+        description='The unit for the metric.',
     ),
 ) -> List[MetricStatistics]:
     """Retrieves statistics for a specified CloudWatch metric.
@@ -297,6 +297,102 @@ async def get_metric_statistics_tool(
     except Exception as e:
         logger.error(f'Error in get_metric_statistics_tool: {str(e)}')
         await ctx.error(f'Error retrieving metric statistics: {str(e)}')
+        raise
+
+
+# Dashboard API implementations
+@mcp.tool(name='delete_dashboards')
+async def delete_dashboards_tool(
+    ctx: Context,
+    dashboard_names: List[str] = Field(
+        ...,
+        description='The names of the dashboards to delete.',
+    ),
+) -> Dict[str, str]:
+    """Deletes the specified CloudWatch dashboards."""
+    try:
+        cloudwatch_client.delete_dashboards(DashboardNames=dashboard_names)
+        logger.info(f'Successfully deleted {len(dashboard_names)} dashboards')
+        return {"status": f"Successfully deleted {len(dashboard_names)} dashboards"}
+    except Exception as e:
+        logger.error(f'Error in delete_dashboards_tool: {str(e)}')
+        await ctx.error(f'Error deleting dashboards: {str(e)}')
+        raise
+
+@mcp.tool(name='get_dashboard')
+async def get_dashboard_tool(
+    ctx: Context,
+    dashboard_name: str = Field(
+        ...,
+        description='The name of the dashboard to retrieve.',
+    ),
+):
+    """Retrieves the specified CloudWatch dashboard."""
+    try:
+        response = cloudwatch_client.get_dashboard(DashboardName=dashboard_name)
+        return {
+            "dashboardName": response.get('DashboardName'),
+            "dashboardArn": response.get('DashboardArn'),
+            "dashboardBody": response.get('DashboardBody'),
+            "size": response.get('Size')
+        }
+    except Exception as e:
+        logger.error(f'Error in get_dashboard_tool: {str(e)}')
+        await ctx.error(f'Error retrieving dashboard: {str(e)}')
+        raise
+
+@mcp.tool(name='list_dashboards')
+async def list_dashboards_tool(
+    ctx: Context,
+    dashboard_name_prefix: Optional[str] = Field(
+        None,
+        description='The prefix of the dashboard names to filter by.',
+    ),
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
+):
+    """Lists the CloudWatch dashboards in your account."""
+    try:
+        kwargs = {
+            'DashboardNamePrefix': dashboard_name_prefix,
+            'NextToken': next_token,
+        }
+        response = cloudwatch_client.list_dashboards(**remove_null_values(kwargs))
+        return {
+            "dashboardEntries": response.get('DashboardEntries', []),
+            "nextToken": response.get('NextToken')
+        }
+    except Exception as e:
+        logger.error(f'Error in list_dashboards_tool: {str(e)}')
+        await ctx.error(f'Error listing dashboards: {str(e)}')
+        raise
+
+@mcp.tool(name='put_dashboard')
+async def put_dashboard_tool(
+    ctx: Context,
+    dashboard_name: str = Field(
+        ...,
+        description='The name of the dashboard.',
+    ),
+    dashboard_body: str = Field(
+        ...,
+        description='The detailed information about the dashboard in JSON format.',
+    ),
+):
+    """Creates or updates a CloudWatch dashboard."""
+    try:
+        response = cloudwatch_client.put_dashboard(
+            DashboardName=dashboard_name,
+            DashboardBody=dashboard_body
+        )
+        return {
+            "dashboardValidationMessages": response.get('DashboardValidationMessages', [])
+        }
+    except Exception as e:
+        logger.error(f'Error in put_dashboard_tool: {str(e)}')
+        await ctx.error(f'Error creating or updating dashboard: {str(e)}')
         raise
 
 

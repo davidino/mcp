@@ -15,3 +15,5 @@
 """awslabs.cloudwatch-metrics-mcp-server"""
 
 MCP_SERVER_VERSION = '0.0.1'
+
+# No need to import dashboards module as the tools are now directly in server.py
