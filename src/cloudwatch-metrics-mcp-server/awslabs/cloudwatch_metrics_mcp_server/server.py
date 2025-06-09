@@ -1394,6 +1394,215 @@ async def put_managed_insight_rules_tool(
         raise
 
 
+# Metric Streams API implementations
+@mcp.tool(name='delete_metric_stream')
+async def delete_metric_stream_tool(
+    ctx: Context,
+    name: str = Field(
+        ...,
+        description='The name of the metric stream to delete.',
+    ),
+):
+    """Deletes the specified metric stream."""
+    try:
+        cloudwatch_client.delete_metric_stream(
+            Name=name
+        )
+        
+        logger.info(f'Successfully deleted metric stream: {name}')
+        return {"status": f"Successfully deleted metric stream: {name}"}
+    
+    except Exception as e:
+        logger.error(f'Error in delete_metric_stream_tool: {str(e)}')
+        await ctx.error(f'Error deleting metric stream: {str(e)}')
+        raise
+
+
+@mcp.tool(name='get_metric_stream')
+async def get_metric_stream_tool(
+    ctx: Context,
+    name: str = Field(
+        ...,
+        description='The name of the metric stream to retrieve.',
+    ),
+):
+    """Retrieves the specified metric stream."""
+    try:
+        response = cloudwatch_client.get_metric_stream(
+            Name=name
+        )
+        
+        return {
+            "arn": response.get('Arn'),
+            "name": response.get('Name'),
+            "includeFilters": response.get('IncludeFilters'),
+            "excludeFilters": response.get('ExcludeFilters'),
+            "firehoseArn": response.get('FirehoseArn'),
+            "roleArn": response.get('RoleArn'),
+            "state": response.get('State'),
+            "creationDate": response.get('CreationDate').isoformat() if hasattr(response.get('CreationDate'), 'isoformat') else str(response.get('CreationDate')),
+            "lastUpdateDate": response.get('LastUpdateDate').isoformat() if hasattr(response.get('LastUpdateDate'), 'isoformat') else str(response.get('LastUpdateDate')),
+            "outputFormat": response.get('OutputFormat'),
+            "statisticsConfigurations": response.get('StatisticsConfigurations'),
+            "includeLinkedAccountsMetrics": response.get('IncludeLinkedAccountsMetrics')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in get_metric_stream_tool: {str(e)}')
+        await ctx.error(f'Error retrieving metric stream: {str(e)}')
+        raise
+
+
+@mcp.tool(name='list_metric_streams')
+async def list_metric_streams_tool(
+    ctx: Context,
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
+    max_results: Optional[int] = Field(
+        None,
+        description='The maximum number of results to return.',
+    ),
+):
+    """Lists the metric streams in your account."""
+    try:
+        kwargs = {
+            'NextToken': next_token,
+            'MaxResults': max_results,
+        }
+        
+        response = cloudwatch_client.list_metric_streams(**remove_null_values(kwargs))
+        
+        # Convert dates to strings
+        entries = []
+        for entry in response.get('Entries', []):
+            if 'CreationDate' in entry and hasattr(entry['CreationDate'], 'isoformat'):
+                entry['CreationDate'] = entry['CreationDate'].isoformat()
+            if 'LastUpdateDate' in entry and hasattr(entry['LastUpdateDate'], 'isoformat'):
+                entry['LastUpdateDate'] = entry['LastUpdateDate'].isoformat()
+            entries.append(entry)
+        
+        return {
+            "entries": entries,
+            "nextToken": response.get('NextToken')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in list_metric_streams_tool: {str(e)}')
+        await ctx.error(f'Error listing metric streams: {str(e)}')
+        raise
+
+
+@mcp.tool(name='put_metric_stream')
+async def put_metric_stream_tool(
+    ctx: Context,
+    name: str = Field(
+        ...,
+        description='The name of the metric stream.',
+    ),
+    firehose_arn: str = Field(
+        ...,
+        description='The ARN of the Firehose delivery stream to use for this metric stream.',
+    ),
+    role_arn: str = Field(
+        ...,
+        description='The ARN of the IAM role that will be used to write to the Firehose delivery stream.',
+    ),
+    output_format: str = Field(
+        ...,
+        description='The output format of the metric stream. Valid values are json, opentelemetry0.7, and opentelemetry1.0.',
+    ),
+    include_filters: Optional[List[Dict]] = Field(
+        None,
+        description='If you specify this parameter, the stream sends metrics from only the metric namespaces that you specify here.',
+    ),
+    exclude_filters: Optional[List[Dict]] = Field(
+        None,
+        description='If you specify this parameter, the stream sends metrics from all metric namespaces except for the namespaces that you specify here.',
+    ),
+    statistics_configurations: Optional[List[Dict]] = Field(
+        None,
+        description='The list of statistics configurations for the metric stream.',
+    ),
+    include_linked_accounts_metrics: Optional[bool] = Field(
+        None,
+        description='If you are creating a metric stream in a monitoring account, specify true to include metrics from source accounts that are linked to this monitoring account.',
+    ),
+):
+    """Creates or updates a metric stream."""
+    try:
+        kwargs = {
+            'Name': name,
+            'FirehoseArn': firehose_arn,
+            'RoleArn': role_arn,
+            'OutputFormat': output_format,
+            'IncludeFilters': include_filters,
+            'ExcludeFilters': exclude_filters,
+            'StatisticsConfigurations': statistics_configurations,
+            'IncludeLinkedAccountsMetrics': include_linked_accounts_metrics,
+        }
+        
+        response = cloudwatch_client.put_metric_stream(**remove_null_values(kwargs))
+        
+        logger.info(f'Successfully created or updated metric stream: {name}')
+        return {
+            "status": f"Successfully created or updated metric stream: {name}",
+            "arn": response.get('Arn')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in put_metric_stream_tool: {str(e)}')
+        await ctx.error(f'Error creating or updating metric stream: {str(e)}')
+        raise
+
+
+@mcp.tool(name='start_metric_streams')
+async def start_metric_streams_tool(
+    ctx: Context,
+    names: List[str] = Field(
+        ...,
+        description='The names of the metric streams to start.',
+    ),
+):
+    """Starts the specified metric streams."""
+    try:
+        cloudwatch_client.start_metric_streams(
+            Names=names
+        )
+        
+        logger.info(f'Successfully started {len(names)} metric streams')
+        return {"status": f"Successfully started {len(names)} metric streams"}
+    
+    except Exception as e:
+        logger.error(f'Error in start_metric_streams_tool: {str(e)}')
+        await ctx.error(f'Error starting metric streams: {str(e)}')
+        raise
+
+
+@mcp.tool(name='stop_metric_streams')
+async def stop_metric_streams_tool(
+    ctx: Context,
+    names: List[str] = Field(
+        ...,
+        description='The names of the metric streams to stop.',
+    ),
+):
+    """Stops the specified metric streams."""
+    try:
+        cloudwatch_client.stop_metric_streams(
+            Names=names
+        )
+        
+        logger.info(f'Successfully stopped {len(names)} metric streams')
+        return {"status": f"Successfully stopped {len(names)} metric streams"}
+    
+    except Exception as e:
+        logger.error(f'Error in stop_metric_streams_tool: {str(e)}')
+        await ctx.error(f'Error stopping metric streams: {str(e)}')
+        raise
+
+
 def main():
     """Run the MCP server."""
     mcp.run()

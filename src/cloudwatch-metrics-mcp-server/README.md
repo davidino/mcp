@@ -53,6 +53,14 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `desc_anomaly_detectors` - Lists the anomaly detection models that you have created.
 * `put_anomaly_detector` - Creates or updates an anomaly detection model for a CloudWatch metric.
 
+### Metric Streams
+* `delete_metric_stream` - Deletes the specified metric stream.
+* `get_metric_stream` - Retrieves the specified metric stream.
+* `list_metric_streams` - Lists the metric streams in your account.
+* `put_metric_stream` - Creates or updates a metric stream.
+* `start_metric_streams` - Starts the specified metric streams.
+* `stop_metric_streams` - Stops the specified metric streams.
+
 ### Insight Rules
 * `delete_insight_rules` - Deletes the specified Contributor Insights rules.
 * `desc_insight_rules` - Returns a list of all Contributor Insights rules in your account.
@@ -99,6 +107,12 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:ListManagedInsightRules`
 * `cloudwatch:PutInsightRule`
 * `cloudwatch:PutManagedInsightRules`
+* `cloudwatch:DeleteMetricStream`
+* `cloudwatch:GetMetricStream`
+* `cloudwatch:ListMetricStreams`
+* `cloudwatch:PutMetricStream`
+* `cloudwatch:StartMetricStreams`
+* `cloudwatch:StopMetricStreams`
 
 ## Installation
 
