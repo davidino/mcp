@@ -37,6 +37,17 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `list_dashboards` - Lists the CloudWatch dashboards in your account.
 * `put_dashboard` - Creates or updates a CloudWatch dashboard.
 
+### Alarms
+* `delete_alarms` - Deletes the specified CloudWatch alarms.
+* `describe_alarm_history` - Retrieves the history for the specified alarm.
+* `describe_alarms` - Retrieves information about the specified alarms.
+* `describe_alarms_for_metric` - Retrieves all alarms for a specified metric.
+* `disable_alarm_actions` - Disables actions for the specified alarms.
+* `enable_alarm_actions` - Enables actions for the specified alarms.
+* `put_composite_alarm` - Creates or updates a composite alarm.
+* `put_metric_alarm` - Creates or updates a metric alarm.
+* `set_alarm_state` - Temporarily sets the state of an alarm.
+
 ### Anomaly Detection
 * `delete_anomaly_detector` - Deletes an anomaly detection model for a CloudWatch metric.
 * `describe_anomaly_detectors` - Lists the anomaly detection models that you have created.
@@ -61,6 +72,15 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:ListTagsForResource`
 * `cloudwatch:TagResource`
 * `cloudwatch:UntagResource`
+* `cloudwatch:DescribeAlarmHistory`
+* `cloudwatch:DescribeAlarms`
+* `cloudwatch:DescribeAlarmsForMetric`
+* `cloudwatch:DeleteAlarms`
+* `cloudwatch:DisableAlarmActions`
+* `cloudwatch:EnableAlarmActions`
+* `cloudwatch:PutCompositeAlarm`
+* `cloudwatch:PutMetricAlarm`
+* `cloudwatch:SetAlarmState`
 
 ## Installation
 
