@@ -41,7 +41,7 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `delete_alarms` - Deletes the specified CloudWatch alarms.
 * `describe_alarm_history` - Retrieves the history for the specified alarm.
 * `describe_alarms` - Retrieves information about the specified alarms.
-* `describe_alarms_for_metric` - Retrieves all alarms for a specified metric.
+* `desc_alarms_for_metric` - Retrieves all alarms for a specified metric.
 * `disable_alarm_actions` - Disables actions for the specified alarms.
 * `enable_alarm_actions` - Enables actions for the specified alarms.
 * `put_composite_alarm` - Creates or updates a composite alarm.
@@ -50,7 +50,7 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 
 ### Anomaly Detection
 * `delete_anomaly_detector` - Deletes an anomaly detection model for a CloudWatch metric.
-* `describe_anomaly_detectors` - Lists the anomaly detection models that you have created.
+* `desc_anomaly_detectors` - Lists the anomaly detection models that you have created.
 * `put_anomaly_detector` - Creates or updates an anomaly detection model for a CloudWatch metric.
 
 ### Tags

@@ -444,7 +444,7 @@ async def delete_anomaly_detector_tool(
         raise
 
 
-@mcp.tool(name='describe_anomaly_detectors')
+@mcp.tool(name='desc_anomaly_detectors')
 async def describe_anomaly_detectors_tool(
     ctx: Context,
     namespace: Optional[str] = Field(
@@ -774,7 +774,7 @@ async def describe_alarms_tool(
         raise
 
 
-@mcp.tool(name='describe_alarms_for_metric')
+@mcp.tool(name='desc_alarms_for_metric')
 async def describe_alarms_for_metric_tool(
     ctx: Context,
     namespace: str = Field(
