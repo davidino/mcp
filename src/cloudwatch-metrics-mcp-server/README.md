@@ -53,6 +53,16 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `desc_anomaly_detectors` - Lists the anomaly detection models that you have created.
 * `put_anomaly_detector` - Creates or updates an anomaly detection model for a CloudWatch metric.
 
+### Insight Rules
+* `delete_insight_rules` - Deletes the specified Contributor Insights rules.
+* `desc_insight_rules` - Returns a list of all Contributor Insights rules in your account.
+* `disable_insight_rules` - Disables the specified Contributor Insights rules.
+* `enable_insight_rules` - Enables the specified Contributor Insights rules.
+* `get_insight_rule_report` - Returns data about the contributors for the specified rule.
+* `list_managed_insight_rules` - Returns a list of managed Contributor Insights rules for a specific AWS resource.
+* `put_insight_rule` - Creates a Contributor Insights rule.
+* `put_managed_insight_rules` - Creates managed Contributor Insights rules for a specified AWS resource.
+
 ### Tags
 * `list_tags_for_resource` - Lists the tags for a CloudWatch resource.
 * `tag_resource` - Adds or modifies tags for a CloudWatch resource.
@@ -81,6 +91,14 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:PutCompositeAlarm`
 * `cloudwatch:PutMetricAlarm`
 * `cloudwatch:SetAlarmState`
+* `cloudwatch:DeleteInsightRules`
+* `cloudwatch:DescribeInsightRules`
+* `cloudwatch:DisableInsightRules`
+* `cloudwatch:EnableInsightRules`
+* `cloudwatch:GetInsightRuleReport`
+* `cloudwatch:ListManagedInsightRules`
+* `cloudwatch:PutInsightRule`
+* `cloudwatch:PutManagedInsightRules`
 
 ## Installation
 

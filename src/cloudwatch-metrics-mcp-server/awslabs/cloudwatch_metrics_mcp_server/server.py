@@ -1096,6 +1096,304 @@ async def set_alarm_state_tool(
         raise
 
 
+# Insight Rules API implementations
+@mcp.tool(name='delete_insight_rules')
+async def delete_insight_rules_tool(
+    ctx: Context,
+    rule_names: List[str] = Field(
+        ...,
+        description='The names of the rules to delete.',
+    ),
+):
+    """Deletes the specified Contributor Insights rules."""
+    try:
+        response = cloudwatch_client.delete_insight_rules(
+            RuleNames=rule_names
+        )
+        
+        failures = response.get('Failures', [])
+        if failures:
+            failure_messages = [f"{f.get('FailureResource')}: {f.get('ExceptionType')} - {f.get('ErrorMessage')}" for f in failures]
+            return {
+                "status": f"Deleted {len(rule_names) - len(failures)} rules, with {len(failures)} failures",
+                "failures": failure_messages
+            }
+        
+        logger.info(f'Successfully deleted {len(rule_names)} insight rules')
+        return {"status": f"Successfully deleted {len(rule_names)} insight rules"}
+    
+    except Exception as e:
+        logger.error(f'Error in delete_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error deleting insight rules: {str(e)}')
+        raise
+
+
+@mcp.tool(name='desc_insight_rules')
+async def describe_insight_rules_tool(
+    ctx: Context,
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
+    max_results: Optional[int] = Field(
+        None,
+        description='The maximum number of results to return.',
+    ),
+):
+    """Returns a list of all Contributor Insights rules in your account."""
+    try:
+        kwargs = {
+            'NextToken': next_token,
+            'MaxResults': max_results,
+        }
+        
+        response = cloudwatch_client.describe_insight_rules(**remove_null_values(kwargs))
+        
+        return {
+            "insightRules": response.get('InsightRules', []),
+            "nextToken": response.get('NextToken')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in describe_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error describing insight rules: {str(e)}')
+        raise
+
+
+@mcp.tool(name='disable_insight_rules')
+async def disable_insight_rules_tool(
+    ctx: Context,
+    rule_names: List[str] = Field(
+        ...,
+        description='The names of the rules to disable.',
+    ),
+):
+    """Disables the specified Contributor Insights rules."""
+    try:
+        response = cloudwatch_client.disable_insight_rules(
+            RuleNames=rule_names
+        )
+        
+        failures = response.get('Failures', [])
+        if failures:
+            failure_messages = [f"{f.get('FailureResource')}: {f.get('ExceptionType')} - {f.get('ErrorMessage')}" for f in failures]
+            return {
+                "status": f"Disabled {len(rule_names) - len(failures)} rules, with {len(failures)} failures",
+                "failures": failure_messages
+            }
+        
+        logger.info(f'Successfully disabled {len(rule_names)} insight rules')
+        return {"status": f"Successfully disabled {len(rule_names)} insight rules"}
+    
+    except Exception as e:
+        logger.error(f'Error in disable_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error disabling insight rules: {str(e)}')
+        raise
+
+
+@mcp.tool(name='enable_insight_rules')
+async def enable_insight_rules_tool(
+    ctx: Context,
+    rule_names: List[str] = Field(
+        ...,
+        description='The names of the rules to enable.',
+    ),
+):
+    """Enables the specified Contributor Insights rules."""
+    try:
+        response = cloudwatch_client.enable_insight_rules(
+            RuleNames=rule_names
+        )
+        
+        failures = response.get('Failures', [])
+        if failures:
+            failure_messages = [f"{f.get('FailureResource')}: {f.get('ExceptionType')} - {f.get('ErrorMessage')}" for f in failures]
+            return {
+                "status": f"Enabled {len(rule_names) - len(failures)} rules, with {len(failures)} failures",
+                "failures": failure_messages
+            }
+        
+        logger.info(f'Successfully enabled {len(rule_names)} insight rules')
+        return {"status": f"Successfully enabled {len(rule_names)} insight rules"}
+    
+    except Exception as e:
+        logger.error(f'Error in enable_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error enabling insight rules: {str(e)}')
+        raise
+
+
+@mcp.tool(name='get_insight_rule_report')
+async def get_insight_rule_report_tool(
+    ctx: Context,
+    rule_name: str = Field(
+        ...,
+        description='The name of the rule.',
+    ),
+    start_time: str = Field(
+        ...,
+        description='ISO 8601 formatted start time for the report (e.g., "2025-04-19T20:00:00+00:00").',
+    ),
+    end_time: str = Field(
+        ...,
+        description='ISO 8601 formatted end time for the report (e.g., "2025-04-19T21:00:00+00:00").',
+    ),
+    period: int = Field(
+        ...,
+        description='The period, in seconds, to use for the statistics in the report.',
+    ),
+    max_contributor_count: Optional[int] = Field(
+        None,
+        description='The maximum number of contributors to include in the report.',
+    ),
+    metrics: Optional[List[str]] = Field(
+        None,
+        description='The metrics to include in the report.',
+    ),
+    order_by: Optional[str] = Field(
+        None,
+        description='Determines how the contributors are ordered in the report.',
+    ),
+):
+    """Returns data about the contributors for the specified rule."""
+    try:
+        kwargs = {
+            'RuleName': rule_name,
+            'StartTime': datetime.datetime.fromisoformat(start_time),
+            'EndTime': datetime.datetime.fromisoformat(end_time),
+            'Period': period,
+            'MaxContributorCount': max_contributor_count,
+            'Metrics': metrics,
+            'OrderBy': order_by,
+        }
+        
+        response = cloudwatch_client.get_insight_rule_report(**remove_null_values(kwargs))
+        
+        return {
+            "keyLabels": response.get('KeyLabels', []),
+            "aggregationStatistic": response.get('AggregationStatistic'),
+            "aggregateValue": response.get('AggregateValue'),
+            "approximateUniqueCount": response.get('ApproximateUniqueCount'),
+            "contributors": response.get('Contributors', []),
+            "metricDatapoints": response.get('MetricDatapoints', [])
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in get_insight_rule_report_tool: {str(e)}')
+        await ctx.error(f'Error getting insight rule report: {str(e)}')
+        raise
+
+
+@mcp.tool(name='list_managed_insight_rules')
+async def list_managed_insight_rules_tool(
+    ctx: Context,
+    resource_arn: str = Field(
+        ...,
+        description='The ARN of the resource.',
+    ),
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
+    max_results: Optional[int] = Field(
+        None,
+        description='The maximum number of results to return.',
+    ),
+):
+    """Returns a list of managed Contributor Insights rules for a specific AWS resource."""
+    try:
+        kwargs = {
+            'ResourceARN': resource_arn,
+            'NextToken': next_token,
+            'MaxResults': max_results,
+        }
+        
+        response = cloudwatch_client.list_managed_insight_rules(**remove_null_values(kwargs))
+        
+        return {
+            "managedRules": response.get('ManagedRules', []),
+            "nextToken": response.get('NextToken')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in list_managed_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error listing managed insight rules: {str(e)}')
+        raise
+
+
+@mcp.tool(name='put_insight_rule')
+async def put_insight_rule_tool(
+    ctx: Context,
+    rule_name: str = Field(
+        ...,
+        description='The name of the rule.',
+    ),
+    rule_definition: str = Field(
+        ...,
+        description='The definition of the rule, as a JSON string.',
+    ),
+    rule_state: Optional[str] = Field(
+        None,
+        description='The state of the rule. Valid values are ENABLED and DISABLED.',
+    ),
+    tags: Optional[Dict[str, str]] = Field(
+        None,
+        description='A map of key-value pairs to associate with the rule.',
+    ),
+):
+    """Creates a Contributor Insights rule."""
+    try:
+        kwargs = {
+            'RuleName': rule_name,
+            'RuleDefinition': rule_definition,
+            'RuleState': rule_state,
+            'Tags': tags,
+        }
+        
+        response = cloudwatch_client.put_insight_rule(**remove_null_values(kwargs))
+        
+        logger.info(f'Successfully created or updated insight rule: {rule_name}')
+        return {
+            "status": f"Successfully created or updated insight rule: {rule_name}",
+            "ruleArn": response.get('RuleArn')
+        }
+    
+    except Exception as e:
+        logger.error(f'Error in put_insight_rule_tool: {str(e)}')
+        await ctx.error(f'Error creating or updating insight rule: {str(e)}')
+        raise
+
+
+@mcp.tool(name='put_managed_insight_rules')
+async def put_managed_insight_rules_tool(
+    ctx: Context,
+    managed_rules: List[Dict] = Field(
+        ...,
+        description='The managed rules to create.',
+    ),
+):
+    """Creates managed Contributor Insights rules for a specified AWS resource."""
+    try:
+        response = cloudwatch_client.put_managed_insight_rules(
+            ManagedRules=managed_rules
+        )
+        
+        failures = response.get('Failures', [])
+        if failures:
+            failure_messages = [f"{f.get('FailureResource')}: {f.get('ExceptionType')} - {f.get('ErrorMessage')}" for f in failures]
+            return {
+                "status": f"Created {len(managed_rules) - len(failures)} rules, with {len(failures)} failures",
+                "failures": failure_messages
+            }
+        
+        logger.info(f'Successfully created {len(managed_rules)} managed insight rules')
+        return {"status": f"Successfully created {len(managed_rules)} managed insight rules"}
+    
+    except Exception as e:
+        logger.error(f'Error in put_managed_insight_rules_tool: {str(e)}')
+        await ctx.error(f'Error creating managed insight rules: {str(e)}')
+        raise
+
+
 def main():
     """Run the MCP server."""
     mcp.run()
