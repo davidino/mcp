@@ -30,6 +30,7 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `list_metrics` - Lists metrics for the specified namespace, optionally filtered by metric name, dimensions, or tags.
 * `get_metric_data` - Retrieves metric data from CloudWatch using metric queries with specified time range and period.
 * `get_metric_statistics` - Retrieves statistics for the specified metric, with options for time range, period, and statistics types.
+* `put_metric_data` - Publishes metric data points to Amazon CloudWatch.
 
 ### Dashboards
 * `delete_dashboards` - Deletes one or more CloudWatch dashboards.
@@ -80,25 +81,26 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:ListMetrics`
 * `cloudwatch:GetMetricData`
 * `cloudwatch:GetMetricStatistics`
+* `cloudwatch:PutMetricData`
 * `cloudwatch:DeleteDashboards`
 * `cloudwatch:GetDashboard`
 * `cloudwatch:ListDashboards`
 * `cloudwatch:PutDashboard`
+* `cloudwatch:DeleteAlarms`
+* `cloudwatch:DescribeAlarmHistory`
+* `cloudwatch:DescribeAlarms`
+* `cloudwatch:DescribeAlarmsForMetric`
+* `cloudwatch:DisableAlarmActions`
+* `cloudwatch:EnableAlarmActions`
+* `cloudwatch:PutCompositeAlarm`
+* `cloudwatch:PutMetricAlarm`
+* `cloudwatch:SetAlarmState`
 * `cloudwatch:DeleteAnomalyDetector`
 * `cloudwatch:DescribeAnomalyDetectors`
 * `cloudwatch:PutAnomalyDetector`
 * `cloudwatch:ListTagsForResource`
 * `cloudwatch:TagResource`
 * `cloudwatch:UntagResource`
-* `cloudwatch:DescribeAlarmHistory`
-* `cloudwatch:DescribeAlarms`
-* `cloudwatch:DescribeAlarmsForMetric`
-* `cloudwatch:DeleteAlarms`
-* `cloudwatch:DisableAlarmActions`
-* `cloudwatch:EnableAlarmActions`
-* `cloudwatch:PutCompositeAlarm`
-* `cloudwatch:PutMetricAlarm`
-* `cloudwatch:SetAlarmState`
 * `cloudwatch:DeleteInsightRules`
 * `cloudwatch:DescribeInsightRules`
 * `cloudwatch:DisableInsightRules`
