@@ -118,6 +118,39 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:StartMetricStreams`
 * `cloudwatch:StopMetricStreams`
 
+## Development
+
+### Running Tests
+
+To run the tests, follow these steps:
+
+1. Create a virtual environment:
+   ```bash
+   python3 -m venv test_venv
+   source test_venv/bin/activate
+   ```
+
+2. Install the package and test dependencies:
+   ```bash
+   pip install -e .
+   pip install pytest pytest-asyncio
+   ```
+
+3. Run all tests:
+   ```bash
+   python -m pytest
+   ```
+
+4. Run specific test files:
+   ```bash
+   python -m pytest tests/unit/test_metric_service.py
+   ```
+
+5. Run tests with verbose output:
+   ```bash
+   python -m pytest -v
+   ```
+
 ## Installation
 
 Example for Amazon Q Developer CLI (~/.aws/amazonq/mcp.json):
