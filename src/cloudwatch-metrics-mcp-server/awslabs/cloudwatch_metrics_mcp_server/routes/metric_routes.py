@@ -14,7 +14,7 @@
 
 """CloudWatch Metric API routes."""
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from mcp.server.fastmcp import Context
 from pydantic import Field
 
@@ -183,9 +183,35 @@ async def put_metric_data_route(
     )
 
 
+async def get_metric_widget_image_route(
+    ctx: Context,
+    mcp,
+    metric_widget: str = Field(
+        ...,
+        description='The JSON string that defines the metric widget to be rendered.',
+    ),
+    output_format: Optional[str] = Field(
+        None,
+        description='The format of the resulting image. Valid values are png and jpg.',
+    ),
+) -> Dict[str, Any]:
+    """Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image.
+    
+    This tool allows you to get a snapshot graph of CloudWatch metrics as an image.
+    The metric widget is defined using a JSON string.
+    
+    Usage: Use this tool to generate metric visualizations for reports or dashboards.
+    """
+    return await metric_service.get_metric_widget_image(
+        metric_widget=metric_widget,
+        output_format=output_format,
+    )
+
+
 def register_routes(mcp_server):
     """Register all metric routes with the MCP server."""
     mcp_server.tool(name='list_metrics')(list_metrics_route)
     mcp_server.tool(name='get_metric_data')(get_metric_data_route)
     mcp_server.tool(name='get_metric_statistics')(get_metric_statistics_route)
     mcp_server.tool(name='put_metric_data')(put_metric_data_route)
+    mcp_server.tool(name='get_metric_widget_image')(get_metric_widget_image_route)

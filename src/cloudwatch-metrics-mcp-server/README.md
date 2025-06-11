@@ -31,6 +31,7 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `get_metric_data` - Retrieves metric data from CloudWatch using metric queries with specified time range and period.
 * `get_metric_statistics` - Retrieves statistics for the specified metric, with options for time range, period, and statistics types.
 * `put_metric_data` - Publishes metric data points to Amazon CloudWatch.
+* `get_metric_widget_image` - Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image.
 
 ### Dashboards
 * `delete_dashboards` - Deletes one or more CloudWatch dashboards.
@@ -82,6 +83,7 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:GetMetricData`
 * `cloudwatch:GetMetricStatistics`
 * `cloudwatch:PutMetricData`
+* `cloudwatch:GetMetricWidgetImage`
 * `cloudwatch:DeleteDashboards`
 * `cloudwatch:GetDashboard`
 * `cloudwatch:ListDashboards`

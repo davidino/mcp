@@ -15,6 +15,7 @@
 """CloudWatch Metric service implementation."""
 
 import datetime
+import base64
 from typing import Dict, List, Optional, Any, Union
 from botocore.exceptions import ClientError
 from loguru import logger
@@ -198,4 +199,32 @@ class MetricService:
             raise
         except Exception as e:
             logger.error(f"Error in put_metric_data: {e}")
+            raise
+            
+    async def get_metric_widget_image(
+        self,
+        metric_widget: str,
+        output_format: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image."""
+        try:
+            kwargs = {
+                'MetricWidget': metric_widget,
+                'OutputFormat': output_format,
+            }
+            
+            response = self.cloudwatch_client.get_metric_widget_image(**remove_null_values(kwargs))
+            
+            # Convert binary image data to base64 for easier handling
+            metric_widget_image = response.get('MetricWidgetImage', b'')
+            base64_image = base64.b64encode(metric_widget_image).decode('utf-8')
+            
+            return {
+                "metricWidgetImage": base64_image
+            }
+        except ClientError as e:
+            logger.error(f"ClientError in get_metric_widget_image: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Error in get_metric_widget_image: {e}")
             raise
