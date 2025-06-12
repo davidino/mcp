@@ -18,7 +18,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from botocore.exceptions import ClientError
 
-from awslabs.cloudwatch_metrics_mcp_server.services.insight_rule_service import InsightRuleService
+from awslabs.cloudwatch_mcp_server.services.insight_rule_service import InsightRuleService
 
 
 @pytest.fixture

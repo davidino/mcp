@@ -19,7 +19,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from botocore.exceptions import ClientError
 
-from awslabs.cloudwatch_metrics_mcp_server.services.metric_service import MetricService
+from awslabs.cloudwatch_mcp_server.services.metric_service import MetricService
 
 
 @pytest.fixture

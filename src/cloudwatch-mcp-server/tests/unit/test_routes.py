@@ -17,7 +17,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from awslabs.cloudwatch_metrics_mcp_server.routes import (
+from awslabs.cloudwatch_mcp_server.routes import (
     alarm_routes,
     dashboard_routes,
     anomaly_detector_routes,

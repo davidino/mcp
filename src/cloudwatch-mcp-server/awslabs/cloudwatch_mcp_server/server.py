@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""awslabs cloudwatch-metrics MCP Server implementation."""
+"""awslabs cloudwatch MCP Server implementation."""
 
 import os
-from awslabs.cloudwatch_metrics_mcp_server import MCP_SERVER_VERSION
+from awslabs.cloudwatch_mcp_server import MCP_SERVER_VERSION
 from botocore.config import Config
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
 # Import services and routes
-from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
-from awslabs.cloudwatch_metrics_mcp_server.routes import (
+from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
+from awslabs.cloudwatch_mcp_server.routes import (
     alarm_routes,
     dashboard_routes,
     anomaly_detector_routes,
@@ -34,8 +34,8 @@ from awslabs.cloudwatch_metrics_mcp_server.routes import (
 
 
 mcp = FastMCP(
-    'awslabs.cloudwatch-metrics-mcp-server',
-    instructions='Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, and visualize metrics to help you respond to operational issues.',
+    'awslabs.cloudwatch-mcp-server',
+    instructions='Use this MCP server to interact with CloudWatch. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, and visualize metrics to help you respond to operational issues.',
     dependencies=[
         'pydantic',
         'loguru',
@@ -44,7 +44,7 @@ mcp = FastMCP(
 
 # Initialize client
 aws_region: str = os.environ.get('AWS_REGION', 'us-east-1')
-config = Config(user_agent_extra=f'awslabs/mcp/cloudwatch-metrics-mcp-server/{MCP_SERVER_VERSION}')
+config = Config(user_agent_extra=f'awslabs/mcp/cloudwatch-mcp-server/{MCP_SERVER_VERSION}')
 
 try:
     cloudwatch_client = ClientFactory.get_cloudwatch_client()
@@ -73,7 +73,7 @@ def main():
     # Run the server
     mcp.run()
     
-    logger.info('CloudWatch Metrics MCP server started')
+    logger.info('CloudWatch MCP server started')
 
 
 if __name__ == '__main__':

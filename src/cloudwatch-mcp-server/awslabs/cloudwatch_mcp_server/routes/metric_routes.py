@@ -18,9 +18,9 @@ from typing import Dict, List, Optional, Any, Union
 from mcp.server.fastmcp import Context
 from pydantic import Field
 
-from awslabs.cloudwatch_metrics_mcp_server.services.metric_service import MetricService
-from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
-from awslabs.cloudwatch_metrics_mcp_server.models import MetricList, MetricData, MetricStatistics
+from awslabs.cloudwatch_mcp_server.services.metric_service import MetricService
+from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
+from awslabs.cloudwatch_mcp_server.models import MetricList, MetricData, MetricStatistics
 
 
 # Initialize services

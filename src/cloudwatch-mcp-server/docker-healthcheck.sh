@@ -14,13 +14,13 @@
 # limitations under the License.
 
 # Check if the process is running
-if ! pgrep -f "awslabs.cloudwatch-metrics-mcp-server" > /dev/null; then
+if ! pgrep -f "awslabs.cloudwatch-mcp-server" > /dev/null; then
     echo "Process not running"
     exit 1
 fi
 
 # Check if the process is listening on stdin
-if ! lsof -a -p $(pgrep -f "awslabs.cloudwatch-metrics-mcp-server") -d 0 | grep -q "STDIN"; then
+if ! lsof -a -p $(pgrep -f "awslabs.cloudwatch-mcp-server") -d 0 | grep -q "STDIN"; then
     echo "Process not listening on stdin"
     exit 1
 fi

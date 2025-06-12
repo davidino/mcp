@@ -18,8 +18,8 @@ from typing import Dict, List, Optional, Any, Union
 from mcp.server.fastmcp import Context
 from pydantic import Field
 
-from awslabs.cloudwatch_metrics_mcp_server.services.insight_rule_service import InsightRuleService
-from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
+from awslabs.cloudwatch_mcp_server.services.insight_rule_service import InsightRuleService
+from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
 
 
 # Initialize services

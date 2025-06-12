@@ -19,7 +19,7 @@ import os
 from botocore.config import Config
 from loguru import logger
 
-from awslabs.cloudwatch_metrics_mcp_server import MCP_SERVER_VERSION
+from awslabs.cloudwatch_mcp_server import MCP_SERVER_VERSION
 
 
 class ClientFactory:

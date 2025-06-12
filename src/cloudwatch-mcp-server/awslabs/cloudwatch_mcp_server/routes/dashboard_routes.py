@@ -20,8 +20,8 @@ from mcp.server.fastmcp import Context
 from pydantic import Field
 from loguru import logger
 
-from awslabs.cloudwatch_metrics_mcp_server.services.dashboard_service import DashboardService
-from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
+from awslabs.cloudwatch_mcp_server.services.dashboard_service import DashboardService
+from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
 
 
 # Initialize services

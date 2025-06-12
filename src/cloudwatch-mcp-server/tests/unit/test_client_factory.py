@@ -18,7 +18,7 @@ import os
 import pytest
 from unittest.mock import patch, MagicMock
 
-from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
+from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
 
 
 class TestClientFactory:

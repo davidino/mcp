@@ -19,7 +19,7 @@ from typing import Dict, List, Optional, Any, Union
 from botocore.exceptions import ClientError
 from loguru import logger
 
-from awslabs.cloudwatch_metrics_mcp_server.common import remove_null_values
+from awslabs.cloudwatch_mcp_server.common import remove_null_values
 
 
 class AlarmService:

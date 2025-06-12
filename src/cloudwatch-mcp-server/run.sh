@@ -17,4 +17,4 @@ pip install -q boto3 loguru mcp pydantic
 
 # Run the server
 echo "Starting CloudWatch Metrics MCP server..."
-python -m awslabs.cloudwatch_metrics_mcp_server.server
+python -m awslabs.cloudwatch_mcp_server.server

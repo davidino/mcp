@@ -17,7 +17,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from awslabs.cloudwatch_metrics_mcp_server.routes import metric_routes
+from awslabs.cloudwatch_mcp_server.routes import metric_routes
 
 
 class TestMetricRoutes:

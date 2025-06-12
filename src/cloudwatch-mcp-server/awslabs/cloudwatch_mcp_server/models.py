@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from awslabs.cloudwatch_metrics_mcp_server.common import epoch_s_to_utc_iso
+from awslabs.cloudwatch_mcp_server.common import epoch_s_to_utc_iso
 from pydantic import BaseModel, Field, field_validator
 from typing import Any, Dict, List, Optional, Union
 
