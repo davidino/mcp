@@ -1,7 +1,7 @@
 [project]
-name = "awslabs.cloudwatch-metrics-mcp-server"
+name = "awslabs.cloudwatch-mcp-server"
 version = "0.0.2"
-description = "An AWS Labs Model Context Protocol (MCP) server for cloudwatch-metrics"
+description = "An AWS Labs Model Context Protocol (MCP) server for CloudWatch"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -10,14 +10,8 @@ dependencies = [
     "mcp[cli]>=1.6.0",
     "pydantic>=2.10.6",
 ]
-
-[project.optional-dependencies]
-test = [
-    "pytest>=8.0.0",
-    "pytest-asyncio>=0.26.0",
-]
 license = {text = "Apache-2.0"}
-license-files = ["LICENSE", "NOTICE" ]
+license-files = ["LICENSE", "NOTICE"]
 authors = [
     {name = "Amazon Web Services"},
     {name = "AWSLabs MCP", email="203918161+awslabs-mcp@users.noreply.github.com"},
@@ -33,15 +27,21 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.26.0",
+]
+
 [project.urls]
 homepage = "https://awslabs.github.io/mcp/"
-docs = "https://awslabs.github.io/mcp/servers/cloudwatch-metrics-mcp-server/"
-documentation = "https://awslabs.github.io/mcp/servers/cloudwatch-metrics-mcp-server/"
+docs = "https://awslabs.github.io/mcp/servers/cloudwatch-mcp-server/"
+documentation = "https://awslabs.github.io/mcp/servers/cloudwatch-mcp-server/"
 repository = "https://github.com/awslabs/mcp.git"
-changelog = "https://github.com/awslabs/mcp/blob/main/src/cloudwatch-metrics-mcp-server/CHANGELOG.md"
+changelog = "https://github.com/awslabs/mcp/blob/main/src/cloudwatch-mcp-server/CHANGELOG.md"
 
 [project.scripts]
-"awslabs.cloudwatch-metrics-mcp-server" = "awslabs.cloudwatch_metrics_mcp_server.server:main"
+"awslabs.cloudwatch-mcp-server" = "awslabs.cloudwatch_metrics_mcp_server.server:main"
 
 [dependency-groups]
 dev = [
@@ -125,7 +125,7 @@ exclude_dirs = ["venv", ".venv", "tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
-testpaths = [ "tests"]
+testpaths = ["tests"]
 asyncio_mode = "auto"
 markers = [
     "live: marks tests that make live API calls (deselect with '-m \"not live\"')",
@@ -135,7 +135,7 @@ markers = [
 [tool.coverage.report]
 exclude_also = [
     'pragma: no cover',
-    'if __name__ == .__main__.:\\n    main()',
+    'if __name__ == .__main__:\\n    main()',
 ]
 
 [tool.coverage.run]

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""awslabs.cloudwatch-metrics-mcp-server"""
+"""awslabs.cloudwatch-mcp-server"""
 
 MCP_SERVER_VERSION = '0.0.1'
 
