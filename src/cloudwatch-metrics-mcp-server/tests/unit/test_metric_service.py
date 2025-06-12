@@ -186,7 +186,7 @@ class TestMetricService:
         )
 
     async def test_get_metric_widget_image_success(self, metric_service, mock_cloudwatch_client):
-        """Test successful get_metric_widget_image call."""
+        """Test successful get_metric_widget_image call with string input."""
         # Setup mock response with binary data
         mock_cloudwatch_client.get_metric_widget_image.return_value = {
             'MetricWidgetImage': b'fake-image-data'
@@ -204,3 +204,34 @@ class TestMetricService:
         mock_cloudwatch_client.get_metric_widget_image.assert_called_once_with(
             MetricWidget='{"metrics": [["AWS/EC2", "CPUUtilization"]]}'
         )
+        
+    async def test_get_metric_widget_image_with_dict(self, metric_service, mock_cloudwatch_client):
+        """Test get_metric_widget_image with dictionary input."""
+        # Setup mock response with binary data
+        mock_cloudwatch_client.get_metric_widget_image.return_value = {
+            'MetricWidgetImage': b'fake-image-data'
+        }
+        
+        # Call the service method with a dictionary
+        result = await metric_service.get_metric_widget_image(
+            metric_widget={"metrics": [["AWS/EC2", "CPUUtilization"]]}
+        )
+        
+        # Verify the result contains base64-encoded image
+        assert 'metricWidgetImage' in result
+        
+        # Verify the client was called correctly with JSON string
+        mock_cloudwatch_client.get_metric_widget_image.assert_called_once_with(
+            MetricWidget='{"metrics": [["AWS/EC2", "CPUUtilization"]]}'
+        )
+        
+    async def test_get_metric_widget_image_invalid_json(self, metric_service):
+        """Test get_metric_widget_image with invalid JSON string."""
+        # Call the service method with invalid JSON
+        with pytest.raises(ValueError) as excinfo:
+            await metric_service.get_metric_widget_image(
+                metric_widget='{invalid json}'
+            )
+        
+        # Verify the error message
+        assert "must be a valid JSON string" in str(excinfo.value)

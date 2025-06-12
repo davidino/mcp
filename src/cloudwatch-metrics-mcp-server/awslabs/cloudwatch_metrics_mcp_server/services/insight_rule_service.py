@@ -15,7 +15,8 @@
 """CloudWatch Insight Rule service implementation."""
 
 import datetime
-from typing import Dict, List, Optional, Any
+import json
+from typing import Dict, List, Optional, Any, Union
 from botocore.exceptions import ClientError
 from loguru import logger
 
@@ -208,8 +209,29 @@ class InsightRuleService:
         rule_state: Optional[str] = None,
         tags: Optional[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
-        """Creates a Contributor Insights rule."""
+        """Creates a Contributor Insights rule.
+        
+        Args:
+            rule_name: The name of the rule.
+            rule_definition: The definition of the rule, as a JSON string.
+            rule_state: The state of the rule (ENABLED or DISABLED).
+            tags: A map of key-value pairs to associate with the rule.
+            
+        Returns:
+            A dictionary containing the status and rule ARN.
+            
+        Raises:
+            ValueError: If the rule_definition is not valid JSON.
+        """
         try:
+            # Validate that rule_definition is valid JSON
+            import json
+            try:
+                json.loads(rule_definition)
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON in rule_definition: {e}")
+                raise ValueError(f"The rule_definition must be a valid JSON string: {e}")
+            
             kwargs = {
                 'RuleName': rule_name,
                 'RuleDefinition': rule_definition,

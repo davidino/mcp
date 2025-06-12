@@ -14,7 +14,7 @@
 
 """CloudWatch Metric API routes."""
 
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from mcp.server.fastmcp import Context
 from pydantic import Field
 
@@ -186,9 +186,9 @@ async def put_metric_data_route(
 async def get_metric_widget_image_route(
     ctx: Context,
     mcp,
-    metric_widget: str = Field(
+    metric_widget: Union[str, Dict[str, Any]] = Field(
         ...,
-        description='The JSON string that defines the metric widget to be rendered.',
+        description='The metric widget definition as a JSON string or dictionary.',
     ),
     output_format: Optional[str] = Field(
         None,
@@ -198,14 +198,30 @@ async def get_metric_widget_image_route(
     """Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image.
     
     This tool allows you to get a snapshot graph of CloudWatch metrics as an image.
-    The metric widget is defined using a JSON string.
+    The metric widget can be defined using either a JSON string or a dictionary.
+    
+    Example widget definition:
+    {
+      "width": 600,
+      "height": 400,
+      "metrics": [
+        [ "AWS/EC2", "CPUUtilization", "InstanceId", "i-012345" ]
+      ],
+      "period": 300,
+      "stat": "Average",
+      "title": "EC2 Instance CPU"
+    }
     
     Usage: Use this tool to generate metric visualizations for reports or dashboards.
     """
-    return await metric_service.get_metric_widget_image(
-        metric_widget=metric_widget,
-        output_format=output_format,
-    )
+    try:
+        return await metric_service.get_metric_widget_image(
+            metric_widget=metric_widget,
+            output_format=output_format,
+        )
+    except ValueError as e:
+        await ctx.error(str(e))
+        raise
 
 
 def register_routes(mcp_server):

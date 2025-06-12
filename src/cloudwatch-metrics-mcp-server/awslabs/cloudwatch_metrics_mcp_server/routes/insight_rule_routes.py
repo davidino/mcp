@@ -14,7 +14,7 @@
 
 """CloudWatch Insight Rule API routes."""
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any, Union
 from mcp.server.fastmcp import Context
 from pydantic import Field
 
@@ -163,9 +163,9 @@ async def put_insight_rule_route(
         ...,
         description='The name of the rule.',
     ),
-    rule_definition: str = Field(
+    rule_definition: Union[str, Dict[str, Any]] = Field(
         ...,
-        description='The definition of the rule, as a JSON string.',
+        description='The definition of the rule, as a JSON string or dictionary.',
     ),
     rule_state: Optional[str] = Field(
         None,
@@ -176,13 +176,27 @@ async def put_insight_rule_route(
         description='A map of key-value pairs to associate with the rule.',
     ),
 ):
-    """Route for put_insight_rule API."""
-    return await insight_rule_service.put_insight_rule(
-        rule_name=rule_name,
-        rule_definition=rule_definition,
-        rule_state=rule_state,
-        tags=tags,
-    )
+    """Route for put_insight_rule API.
+    
+    Creates a Contributor Insights rule.
+    
+    The rule_definition parameter can be either a JSON string or a dictionary.
+    """
+    try:
+        # Convert dictionary to JSON string if needed
+        if isinstance(rule_definition, dict):
+            import json
+            rule_definition = json.dumps(rule_definition)
+            
+        return await insight_rule_service.put_insight_rule(
+            rule_name=rule_name,
+            rule_definition=rule_definition,
+            rule_state=rule_state,
+            tags=tags,
+        )
+    except ValueError as e:
+        await ctx.error(str(e))
+        raise
 
 
 async def put_managed_insight_rules_route(

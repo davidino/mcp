@@ -16,6 +16,7 @@
 
 import datetime
 import base64
+import json
 from typing import Dict, List, Optional, Any, Union
 from botocore.exceptions import ClientError
 from loguru import logger
@@ -203,11 +204,33 @@ class MetricService:
             
     async def get_metric_widget_image(
         self,
-        metric_widget: str,
+        metric_widget: Union[str, Dict[str, Any]],
         output_format: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image."""
+        """Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image.
+        
+        Args:
+            metric_widget: The metric widget definition as a JSON string or dictionary.
+            output_format: The format of the resulting image (png or jpg).
+            
+        Returns:
+            A dictionary containing the base64-encoded image.
+            
+        Raises:
+            ValueError: If the metric_widget is not valid JSON.
+        """
         try:
+            # Convert dictionary to JSON string if needed
+            if isinstance(metric_widget, dict):
+                metric_widget = json.dumps(metric_widget)
+            
+            # Validate that metric_widget is valid JSON
+            try:
+                json.loads(metric_widget)
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON in metric_widget: {e}")
+                raise ValueError(f"The metric_widget must be a valid JSON string: {e}")
+            
             kwargs = {
                 'MetricWidget': metric_widget,
                 'OutputFormat': output_format,
