@@ -14,6 +14,7 @@
 
 """CloudWatch Dashboard service implementation."""
 
+import json
 from typing import Dict, List, Optional, Any
 from botocore.exceptions import ClientError
 from loguru import logger
@@ -90,10 +91,32 @@ class DashboardService:
     async def put_dashboard(
         self,
         dashboard_name: str,
-        dashboard_body: str,
+        dashboard_body: Any,
     ) -> Dict[str, Any]:
-        """Creates or updates a CloudWatch dashboard."""
+        """Creates or updates a CloudWatch dashboard.
+        
+        Args:
+            dashboard_name: The name of the dashboard.
+            dashboard_body: The dashboard body as a string or dictionary.
+            
+        Returns:
+            A dictionary containing dashboard validation messages.
+            
+        Raises:
+            ValueError: If the dashboard body is not valid JSON.
+        """
         try:
+            # Convert dictionary to JSON string if needed
+            if isinstance(dashboard_body, dict):
+                dashboard_body = json.dumps(dashboard_body)
+            
+            # Validate that dashboard_body is valid JSON
+            try:
+                json.loads(dashboard_body)
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON in dashboard_body: {e}")
+                raise ValueError(f"The dashboard_body must be a valid JSON string: {e}")
+            
             response = self.cloudwatch_client.put_dashboard(
                 DashboardName=dashboard_name,
                 DashboardBody=dashboard_body

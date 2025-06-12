@@ -121,6 +121,40 @@ class TestDashboardService:
             DashboardName='TestDashboard',
             DashboardBody='{"widgets":[]}'
         )
+        
+    async def test_put_dashboard_with_dict(self, dashboard_service, mock_cloudwatch_client):
+        """Test put_dashboard with dictionary input."""
+        # Setup mock response
+        mock_cloudwatch_client.put_dashboard.return_value = {
+            'DashboardValidationMessages': []
+        }
+        
+        # Call the service method with a dictionary
+        result = await dashboard_service.put_dashboard(
+            dashboard_name='TestDashboard',
+            dashboard_body={"widgets": []}
+        )
+        
+        # Verify the result
+        assert 'dashboardValidationMessages' in result
+        
+        # Verify the client was called correctly with JSON string
+        mock_cloudwatch_client.put_dashboard.assert_called_once_with(
+            DashboardName='TestDashboard',
+            DashboardBody='{"widgets": []}'
+        )
+        
+    async def test_put_dashboard_invalid_json(self, dashboard_service):
+        """Test put_dashboard with invalid JSON string."""
+        # Call the service method with invalid JSON
+        with pytest.raises(ValueError) as excinfo:
+            await dashboard_service.put_dashboard(
+                dashboard_name='TestDashboard',
+                dashboard_body='{invalid json}'
+            )
+        
+        # Verify the error message
+        assert "must be a valid JSON string" in str(excinfo.value)
 
     async def test_delete_dashboards_success(self, dashboard_service, mock_cloudwatch_client):
         """Test successful delete_dashboards call."""

@@ -14,9 +14,11 @@
 
 """CloudWatch Dashboard API routes."""
 
-from typing import Dict, List, Optional
+import json
+from typing import Dict, List, Optional, Union, Any
 from mcp.server.fastmcp import Context
 from pydantic import Field
+from loguru import logger
 
 from awslabs.cloudwatch_metrics_mcp_server.services.dashboard_service import DashboardService
 from awslabs.cloudwatch_metrics_mcp_server.services.client_factory import ClientFactory
@@ -81,16 +83,46 @@ async def put_dashboard_route(
         ...,
         description='The name of the dashboard.',
     ),
-    dashboard_body: str = Field(
+    dashboard_body: Union[str, Dict[str, Any]] = Field(
         ...,
-        description='The detailed information about the dashboard in JSON format.',
+        description='The detailed information about the dashboard in JSON format. Can be a JSON string or a dictionary.',
     ),
 ):
-    """Route for put_dashboard API."""
-    return await dashboard_service.put_dashboard(
-        dashboard_name=dashboard_name,
-        dashboard_body=dashboard_body,
-    )
+    """Route for put_dashboard API.
+    
+    Creates or updates a CloudWatch dashboard.
+    
+    The dashboard_body parameter can be either a JSON string or a dictionary that defines the dashboard.
+    For example:
+    {
+      "widgets": [
+        {
+          "type": "metric",
+          "x": 0,
+          "y": 0,
+          "width": 12,
+          "height": 6,
+          "properties": {
+            "metrics": [
+              [ "AWS/EC2", "CPUUtilization", "InstanceId", "i-012345" ]
+            ],
+            "period": 300,
+            "stat": "Average",
+            "region": "us-east-1",
+            "title": "EC2 Instance CPU"
+          }
+        }
+      ]
+    }
+    """
+    try:
+        return await dashboard_service.put_dashboard(
+            dashboard_name=dashboard_name,
+            dashboard_body=dashboard_body,
+        )
+    except ValueError as e:
+        await ctx.error(str(e))
+        raise
 
 
 def register_routes(mcp_server):
