@@ -25,6 +25,7 @@ from awslabs.cloudwatch_mcp_server.routes import (
     insight_rule_routes,
     tag_routes,
     metric_routes,
+    logs_routes,
 )
 
 
@@ -77,5 +78,12 @@ class TestRoutes:
         """Test that metric_routes.register_routes can be called."""
         mock_mcp = MagicMock()
         metric_routes.register_routes(mock_mcp)
+        # Verify that tool was called for each route
+        assert mock_mcp.tool.call_count == 5
+        
+    def test_logs_routes_registration(self):
+        """Test that logs_routes.register_routes can be called."""
+        mock_mcp = MagicMock()
+        logs_routes.register_routes(mock_mcp)
         # Verify that tool was called for each route
         assert mock_mcp.tool.call_count == 5

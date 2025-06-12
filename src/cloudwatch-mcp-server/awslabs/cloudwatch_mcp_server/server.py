@@ -30,12 +30,13 @@ from awslabs.cloudwatch_mcp_server.routes import (
     insight_rule_routes,
     tag_routes,
     metric_routes,
+    logs_routes,
 )
 
 
 mcp = FastMCP(
     'awslabs.cloudwatch-mcp-server',
-    instructions='Use this MCP server to interact with CloudWatch. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, and visualize metrics to help you respond to operational issues.',
+    instructions='Use this MCP server to interact with CloudWatch. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms, and analyzing CloudWatch Logs. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, visualize metrics, and analyze logs to help you respond to operational issues.',
     dependencies=[
         'pydantic',
         'loguru',
@@ -63,6 +64,7 @@ def register_routes():
     insight_rule_routes.register_routes(mcp)
     tag_routes.register_routes(mcp)
     metric_routes.register_routes(mcp)
+    logs_routes.register_routes(mcp)
 
 
 def main():

@@ -1,10 +1,10 @@
-# AWS Labs cloudwatch-metrics MCP Server
+# AWS Labs CloudWatch MCP Server
 
-An AWS Labs Model Context Protocol (MCP) server for cloudwatch-metrics
+An AWS Labs Model Context Protocol (MCP) server for CloudWatch
 
 ## Instructions
 
-Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms, and configuring anomaly detection. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, and visualize metrics to help you respond to operational issues.
+Use this MCP server to interact with CloudWatch. Supports retrieving metric data, managing dashboards, working with CloudWatch alarms, analyzing CloudWatch Logs, and configuring anomaly detection. With CloudWatch, you can monitor your AWS resources and applications in real-time, set alarms, create dashboards, visualize metrics, and analyze logs to help you respond to operational issues.
 
 ## Features
 
@@ -12,6 +12,8 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 - Managing CloudWatch dashboards (create, retrieve, list, delete)
 - Working with anomaly detection models
 - Managing resource tags
+- Analyzing CloudWatch Logs with Logs Insights queries
+- Detecting anomalies in log groups
 - Converting human-readable questions and commands into CloudWatch metric queries
 
 ## Prerequisites
@@ -32,6 +34,13 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `get_metric_statistics` - Retrieves statistics for the specified metric, with options for time range, period, and statistics types.
 * `put_metric_data` - Publishes metric data points to Amazon CloudWatch.
 * `get_metric_widget_image` - Gets a snapshot graph of one or more CloudWatch metrics as a bitmap image.
+
+### Logs
+* `describe_log_groups` - Lists AWS CloudWatch log groups and saved queries associated with them.
+* `analyze_log_group` - Analyzes a CloudWatch log group for anomalies, message patterns, and error patterns.
+* `execute_log_insights_query` - Executes a CloudWatch Logs Insights query and waits for the results.
+* `get_query_results` - Retrieves the results of a previously started CloudWatch Logs Insights query.
+* `cancel_query` - Cancels an ongoing CloudWatch Logs Insights query.
 
 ### Dashboards
 * `delete_dashboards` - Deletes one or more CloudWatch dashboards.
@@ -117,39 +126,45 @@ Use this MCP server to interact with CloudWatch Metrics and Dashboards. Supports
 * `cloudwatch:PutMetricStream`
 * `cloudwatch:StartMetricStreams`
 * `cloudwatch:StopMetricStreams`
+* `logs:DescribeLogGroups`
+* `logs:StartQuery`
+* `logs:GetQueryResults`
+* `logs:StopQuery`
+* `logs:DescribeQueryDefinitions`
+* `logs:ListLogAnomalyDetectors`
+* `logs:ListAnomalies`
 
 ## Development
 
+### Running the Server
+
+To run the server locally for development:
+
+```bash
+./run.sh
+```
+
+This script:
+1. Creates a virtual environment if it doesn't exist
+2. Installs the package and its dependencies
+3. Runs the server
+
 ### Running Tests
 
-To run the tests, follow these steps:
+To run the tests, use the provided script:
 
-1. Create a virtual environment:
-   ```bash
-   python3 -m venv test_venv
-   source test_venv/bin/activate
-   ```
+```bash
+./run-test.sh
+```
 
-2. Install the package and test dependencies:
-   ```bash
-   pip install -e .
-   pip install pytest pytest-asyncio
-   ```
+This script:
+1. Creates a test virtual environment if it doesn't exist
+2. Installs the package and test dependencies
+3. Runs all tests
 
-3. Run all tests:
-   ```bash
-   python -m pytest
-   ```
-
-4. Run specific test files:
-   ```bash
-   python -m pytest tests/unit/test_metric_service.py
-   ```
-
-5. Run tests with verbose output:
-   ```bash
-   python -m pytest -v
-   ```
+You can also:
+- Run specific test files: `./run-test.sh tests/unit/test_logs_service.py`
+- Run tests with verbose output: `./run-test.sh --verbose` or `./run-test.sh -v`
 
 ## Installation
 
@@ -158,14 +173,12 @@ Example for Amazon Q Developer CLI (~/.aws/amazonq/mcp.json):
 ```json
 {
   "mcpServers": {
-    "awslabs.cloudwatch-metrics-mcp-server": {
+    "awslabs.cloudwatch-mcp-server": {
       "autoApprove": [],
       "disabled": false,
       "timeout": 60,
-      "command": "uvx",
-      "args": [
-        "awslabs.cloudwatch-metrics-mcp-server@latest",
-      ],
+      "command": "<your-path-to>/mcp/src/cloudwatch-mcp-server/run.sh",
+      "args": [],
       "env": {
         "AWS_PROFILE": "[The AWS Profile Name to use for AWS access]",
         "AWS_REGION": "[The AWS region to run in]",
@@ -180,14 +193,14 @@ Example for Amazon Q Developer CLI (~/.aws/amazonq/mcp.json):
 ### Build and install docker image locally on the same host of your LLM client
 
 1. `git clone https://github.com/awslabs/mcp.git`
-2. Go to sub-directory 'src/cloudwatch-metrics-mcp-server/'
-3. Run 'docker build -t awslabs/cloudwatch-metrics-mcp-server:latest .'
+2. Go to sub-directory 'src/cloudwatch-mcp-server/'
+3. Run 'docker build -t awslabs/cloudwatch-mcp-server:latest .'
 
 ### Add or update your LLM client's config with following:
 ```json
 {
   "mcpServers": {
-    "awslabs.cloudwatch-metrics-mcp-server": {
+    "awslabs.cloudwatch-mcp-server": {
       "command": "docker",
       "args": [
         "run",
@@ -195,7 +208,7 @@ Example for Amazon Q Developer CLI (~/.aws/amazonq/mcp.json):
         "--rm",
         "-e", "AWS_PROFILE=[your data]",
         "-e", "AWS_REGION=[your data]",
-        "awslabs/cloudwatch-metrics-mcp-server:latest"
+        "awslabs/cloudwatch-mcp-server:latest"
       ]
     }
   }
