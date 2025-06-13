@@ -17,23 +17,19 @@
 import os
 import sys
 from awslabs.cloudwatch_mcp_server import MCP_SERVER_VERSION
-from botocore.config import Config
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
-# Import services and routes
-from awslabs.cloudwatch_mcp_server.services.client_factory import ClientFactory
-from awslabs.cloudwatch_mcp_server.routes import (
-    alarm_routes,
-    dashboard_routes,
-    anomaly_detector_routes,
-    metric_stream_routes,
-    insight_rule_routes,
-    tag_routes,
-    metric_routes,
-    logs_routes,
-    oam_routes,
-)
+# Import tools
+from awslabs.cloudwatch_mcp_server.tools.logs import CloudWatchLogsTool
+from awslabs.cloudwatch_mcp_server.tools.alarms import AlarmsTool
+from awslabs.cloudwatch_mcp_server.tools.oam.oam_tool import OAMTool
+from awslabs.cloudwatch_mcp_server.tools.metric_streams.metric_streams_tool import MetricStreamsTool
+from awslabs.cloudwatch_mcp_server.tools.dashboards.dashboards_tool import DashboardsTool
+from awslabs.cloudwatch_mcp_server.tools.insight_rules import InsightRulesTool
+from awslabs.cloudwatch_mcp_server.tools.anomaly_detectors import AnomalyDetectorsTool
+from awslabs.cloudwatch_mcp_server.tools.tags import TagsTool
+from awslabs.cloudwatch_mcp_server.tools.metrics import MetricsTool
 
 
 mcp = FastMCP(
@@ -45,35 +41,44 @@ mcp = FastMCP(
     ],
 )
 
-# Initialize clients
+# Get AWS region from environment
 aws_region: str = os.environ.get('AWS_REGION', 'us-east-1')
-config = Config(user_agent_extra=f'awslabs/mcp/cloudwatch-mcp-server/{MCP_SERVER_VERSION}')
 
-try:
-    cloudwatch_client = ClientFactory.get_cloudwatch_client()
-    oam_client = ClientFactory.get_oam_client()
-except Exception as e:
-    logger.error(f'Error creating AWS clients: {str(e)}')
-    raise
-
-# Register all routes
-def register_routes():
-    """Register all routes with the MCP server."""
-    alarm_routes.register_routes(mcp)
-    dashboard_routes.register_routes(mcp)
-    anomaly_detector_routes.register_routes(mcp)
-    metric_stream_routes.register_routes(mcp)
-    insight_rule_routes.register_routes(mcp)
-    tag_routes.register_routes(mcp)
-    metric_routes.register_routes(mcp)
-    logs_routes.register_routes(mcp)
-    oam_routes.register_routes(mcp)
+# Register all tools
+def register_tools():
+    """Register all tools with the MCP server."""
+    logs_tool = CloudWatchLogsTool(region_name=aws_region)
+    logs_tool.register(mcp)
+    
+    alarms_tool = AlarmsTool(region_name=aws_region)
+    alarms_tool.register(mcp)
+    
+    oam_tool = OAMTool(region_name=aws_region)
+    oam_tool.register(mcp)
+    
+    metric_streams_tool = MetricStreamsTool(region_name=aws_region)
+    metric_streams_tool.register(mcp)
+    
+    dashboards_tool = DashboardsTool(region_name=aws_region)
+    dashboards_tool.register(mcp)
+    
+    insight_rules_tool = InsightRulesTool(region_name=aws_region)
+    insight_rules_tool.register(mcp)
+    
+    anomaly_detectors_tool = AnomalyDetectorsTool(region_name=aws_region)
+    anomaly_detectors_tool.register(mcp)
+    
+    tags_tool = TagsTool(region_name=aws_region)
+    tags_tool.register(mcp)
+    
+    metrics_tool = MetricsTool(region_name=aws_region)
+    metrics_tool.register(mcp)
 
 
 def main():
     """Run the MCP server."""
-    # Register all routes
-    register_routes()
+    # Register all tools
+    register_tools()
     
     # Run the server
     mcp.run()

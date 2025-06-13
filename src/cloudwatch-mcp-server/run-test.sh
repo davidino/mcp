@@ -18,11 +18,11 @@ pip install -e ".[test]"
 # Run tests
 echo "Running tests..."
 if [ "$1" == "--verbose" ] || [ "$1" == "-v" ]; then
-    python -m pytest tests/unit/ -v
+    python -m pytest tests/unit/ awslabs/cloudwatch_mcp_server/tools/*/tests/test_*_tool.py -v
 elif [ -n "$1" ]; then
     # If a specific test file or directory is provided
     python -m pytest "$1"
 else
     # Run all tests
-    python -m pytest tests/unit/
+    python -m pytest tests/unit/ awslabs/cloudwatch_mcp_server/tools/*/tests/test_*_tool.py
 fi
