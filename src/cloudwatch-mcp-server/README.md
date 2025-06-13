@@ -82,6 +82,19 @@ Use this MCP server to interact with CloudWatch. Supports retrieving metric data
 * `put_insight_rule` - Creates a Contributor Insights rule.
 * `put_managed_insight_rules` - Creates managed Contributor Insights rules for a specified AWS resource.
 
+### Observability Access Manager (OAM)
+* `list_oam_sinks` - Lists OAM sinks in your AWS account.
+* `get_oam_sink` - Gets details about a specific OAM sink.
+* `create_oam_sink` - Creates a new OAM sink in your AWS account.
+* `update_oam_sink` - Updates an existing OAM sink.
+* `delete_oam_sink` - Deletes an OAM sink from your AWS account.
+* `list_oam_links` - Lists OAM links in your AWS account.
+* `get_oam_link` - Gets details about a specific OAM link.
+* `create_oam_link` - Creates a new OAM link to connect a source account to a monitoring account sink.
+* `update_oam_link` - Updates an existing OAM link.
+* `delete_oam_link` - Deletes an OAM link from your AWS account.
+* `list_attached_oam_links` - Lists links attached to a specific OAM sink.
+
 ### Tags
 * `list_tags_for_resource` - Lists the tags for a CloudWatch resource.
 * `tag_resource` - Adds or modifies tags for a CloudWatch resource.
@@ -133,6 +146,17 @@ Use this MCP server to interact with CloudWatch. Supports retrieving metric data
 * `logs:DescribeQueryDefinitions`
 * `logs:ListLogAnomalyDetectors`
 * `logs:ListAnomalies`
+* `oam:ListSinks`
+* `oam:GetSink`
+* `oam:CreateSink`
+* `oam:UpdateSink`
+* `oam:DeleteSink`
+* `oam:ListLinks`
+* `oam:GetLink`
+* `oam:CreateLink`
+* `oam:UpdateLink`
+* `oam:DeleteLink`
+* `oam:ListAttachedLinks`
 
 ## Development
 

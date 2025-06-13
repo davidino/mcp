@@ -70,3 +70,32 @@ class ClientFactory:
         session = boto3.Session(profile_name=profile_name, region_name=region_name)
         
         return session.client('logs', config=config)
+    
+            
+    @staticmethod
+    def get_oam_client(region_name=None, profile_name=None):
+        """
+        Get an OAM (Observability Access Manager) client.
+        
+        Args:
+            region_name: AWS region name
+            profile_name: AWS profile name
+            
+        Returns:
+            A boto3 OAM client
+        """
+        try:
+            # Use environment variables if parameters not provided
+            region = region_name or os.environ.get('AWS_REGION', 'us-east-1')
+            profile = profile_name or os.environ.get('AWS_PROFILE')
+            
+            config = Config(user_agent_extra=f'awslabs/mcp/cloudwatch-metrics-mcp-server/{MCP_SERVER_VERSION}')
+            
+            if profile:
+                return boto3.Session(profile_name=profile, region_name=region).client('oam', config=config)
+            else:
+                return boto3.Session(region_name=region).client('oam', config=config)
+                
+        except Exception as e:
+            logger.error(f'Error creating OAM client: {str(e)}')
+            raise

@@ -15,6 +15,7 @@
 """awslabs cloudwatch MCP Server implementation."""
 
 import os
+import sys
 from awslabs.cloudwatch_mcp_server import MCP_SERVER_VERSION
 from botocore.config import Config
 from loguru import logger
@@ -31,6 +32,7 @@ from awslabs.cloudwatch_mcp_server.routes import (
     tag_routes,
     metric_routes,
     logs_routes,
+    oam_routes,
 )
 
 
@@ -43,16 +45,16 @@ mcp = FastMCP(
     ],
 )
 
-# Initialize client
+# Initialize clients
 aws_region: str = os.environ.get('AWS_REGION', 'us-east-1')
 config = Config(user_agent_extra=f'awslabs/mcp/cloudwatch-mcp-server/{MCP_SERVER_VERSION}')
 
 try:
     cloudwatch_client = ClientFactory.get_cloudwatch_client()
+    oam_client = ClientFactory.get_oam_client()
 except Exception as e:
-    logger.error(f'Error creating cloudwatch client: {str(e)}')
+    logger.error(f'Error creating AWS clients: {str(e)}')
     raise
-
 
 # Register all routes
 def register_routes():
@@ -65,6 +67,7 @@ def register_routes():
     tag_routes.register_routes(mcp)
     metric_routes.register_routes(mcp)
     logs_routes.register_routes(mcp)
+    oam_routes.register_routes(mcp)
 
 
 def main():
@@ -79,4 +82,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
