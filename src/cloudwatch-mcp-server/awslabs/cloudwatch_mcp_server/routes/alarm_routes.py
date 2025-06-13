@@ -30,13 +30,34 @@ alarm_service = AlarmService(cloudwatch_client)
 async def describe_alarm_history_route(
     ctx: Context,
     mcp,
-    alarm_name: Optional[str] = None,
-    alarm_types: Optional[List[str]] = None,
-    history_item_type: Optional[str] = None,
-    start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
-    max_records: Optional[int] = None,
-    next_token: Optional[str] = None,
+    alarm_name: Optional[str] = Field(
+        None,
+        description='The name of the alarm to retrieve history for.',
+    ),
+    alarm_types: Optional[List[str]] = Field(
+        None,
+        description='The type of alarm histories to retrieve. Possible values: CompositeAlarm, MetricAlarm.',
+    ),
+    history_item_type: Optional[str] = Field(
+        None,
+        description='The type of alarm history item to retrieve. Possible values: ConfigurationUpdate, StateUpdate, Action.',
+    ),
+    start_date: Optional[str] = Field(
+        None,
+        description='The start date for the alarm history in ISO 8601 format.',
+    ),
+    end_date: Optional[str] = Field(
+        None,
+        description='The end date for the alarm history in ISO 8601 format.',
+    ),
+    max_records: Optional[int] = Field(
+        None,
+        description='The maximum number of alarm history records to retrieve.',
+    ),
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
 ):
     """Route for describe_alarm_history API."""
     return await alarm_service.describe_alarm_history(
@@ -53,13 +74,34 @@ async def describe_alarm_history_route(
 async def describe_alarms_route(
     ctx: Context,
     mcp,
-    alarm_names: Optional[List[str]] = None,
-    alarm_name_prefix: Optional[str] = None,
-    alarm_types: Optional[List[str]] = None,
-    state_value: Optional[str] = None,
-    action_prefix: Optional[str] = None,
-    max_records: Optional[int] = None,
-    next_token: Optional[str] = None,
+    alarm_names: Optional[List[str]] = Field(
+        None,
+        description='The names of the alarms to retrieve information about.',
+    ),
+    alarm_name_prefix: Optional[str] = Field(
+        None,
+        description='The alarm name prefix. Only alarms with names that start with this prefix will be returned.',
+    ),
+    alarm_types: Optional[List[str]] = Field(
+        None,
+        description='The type of alarms to retrieve. Possible values: CompositeAlarm, MetricAlarm.',
+    ),
+    state_value: Optional[str] = Field(
+        None,
+        description='The state value to filter by. Possible values: OK, ALARM, INSUFFICIENT_DATA.',
+    ),
+    action_prefix: Optional[str] = Field(
+        None,
+        description='The action name prefix to filter by.',
+    ),
+    max_records: Optional[int] = Field(
+        None,
+        description='The maximum number of alarm records to retrieve.',
+    ),
+    next_token: Optional[str] = Field(
+        None,
+        description='The token for the next set of results.',
+    ),
 ):
     """Route for describe_alarms API."""
     return await alarm_service.describe_alarms(
@@ -76,11 +118,26 @@ async def describe_alarms_route(
 async def describe_alarms_for_metric_route(
     ctx: Context,
     mcp,
-    namespace: str,
-    metric_name: str,
-    dimensions: Optional[List[Dict[str, str]]] = None,
-    statistic: Optional[str] = None,
-    extended_statistic: Optional[str] = None,
+    namespace: str = Field(
+        ...,
+        description='The namespace of the metric.',
+    ),
+    metric_name: str = Field(
+        ...,
+        description='The name of the metric.',
+    ),
+    dimensions: Optional[List[Dict[str, str]]] = Field(
+        None,
+        description='The dimensions of the metric. Each dimension is a dictionary with "Name" and "Value" keys.',
+    ),
+    statistic: Optional[str] = Field(
+        None,
+        description='The statistic for the metric. Possible values include: SampleCount, Average, Sum, Minimum, Maximum.',
+    ),
+    extended_statistic: Optional[str] = Field(
+        None,
+        description='The extended statistic for the metric. Specify a percentile statistic (p0.0-p100).',
+    ),
 ):
     """Route for describe_alarms_for_metric API."""
     return await alarm_service.describe_alarms_for_metric(
@@ -95,13 +152,34 @@ async def describe_alarms_for_metric_route(
 async def put_composite_alarm_route(
     ctx: Context,
     mcp,
-    alarm_name: str,
-    alarm_rule: str,
-    actions_enabled: Optional[bool] = None,
-    alarm_actions: Optional[List[str]] = None,
-    alarm_description: Optional[str] = None,
-    insufficient_data_actions: Optional[List[str]] = None,
-    ok_actions: Optional[List[str]] = None,
+    alarm_name: str = Field(
+        ...,
+        description='The name of the alarm.',
+    ),
+    alarm_rule: str = Field(
+        ...,
+        description='The rule expression that defines the composite alarm.',
+    ),
+    actions_enabled: Optional[bool] = Field(
+        None,
+        description='Indicates whether actions should be executed during any changes to the alarm state.',
+    ),
+    alarm_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the ALARM state.',
+    ),
+    alarm_description: Optional[str] = Field(
+        None,
+        description='The description for the alarm.',
+    ),
+    insufficient_data_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the INSUFFICIENT_DATA state.',
+    ),
+    ok_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the OK state.',
+    ),
 ):
     """Route for put_composite_alarm API."""
     return await alarm_service.put_composite_alarm(
@@ -118,21 +196,66 @@ async def put_composite_alarm_route(
 async def put_metric_alarm_route(
     ctx: Context,
     mcp,
-    alarm_name: str,
-    comparison_operator: str,
-    evaluation_periods: int,
-    metric_name: Optional[str] = None,
-    namespace: Optional[str] = None,
-    period: Optional[int] = None,
-    statistic: Optional[str] = None,
-    threshold: Optional[float] = None,
-    actions_enabled: Optional[bool] = None,
-    alarm_actions: Optional[List[str]] = None,
-    alarm_description: Optional[str] = None,
-    dimensions: Optional[List[Dict[str, str]]] = None,
-    insufficient_data_actions: Optional[List[str]] = None,
-    ok_actions: Optional[List[str]] = None,
-    unit: Optional[str] = None,
+    alarm_name: str = Field(
+        ...,
+        description='The name of the alarm.',
+    ),
+    comparison_operator: str = Field(
+        ...,
+        description='The arithmetic operation to use when comparing the specified statistic and threshold.',
+    ),
+    evaluation_periods: int = Field(
+        ...,
+        description='The number of periods over which data is compared to the specified threshold.',
+    ),
+    metric_name: Optional[str] = Field(
+        None,
+        description='The name of the metric associated with the alarm.',
+    ),
+    namespace: Optional[str] = Field(
+        None,
+        description='The namespace of the metric associated with the alarm.',
+    ),
+    period: Optional[int] = Field(
+        None,
+        description='The period, in seconds, over which the statistic is applied.',
+    ),
+    statistic: Optional[str] = Field(
+        None,
+        description='The statistic for the metric. Possible values include: SampleCount, Average, Sum, Minimum, Maximum.',
+    ),
+    threshold: Optional[float] = Field(
+        None,
+        description='The value against which the specified statistic is compared.',
+    ),
+    actions_enabled: Optional[bool] = Field(
+        None,
+        description='Indicates whether actions should be executed during any changes to the alarm state.',
+    ),
+    alarm_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the ALARM state.',
+    ),
+    alarm_description: Optional[str] = Field(
+        None,
+        description='The description for the alarm.',
+    ),
+    dimensions: Optional[List[Dict[str, str]]] = Field(
+        None,
+        description='The dimensions of the metric. Each dimension is a dictionary with "Name" and "Value" keys.',
+    ),
+    insufficient_data_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the INSUFFICIENT_DATA state.',
+    ),
+    ok_actions: Optional[List[str]] = Field(
+        None,
+        description='The actions to execute when this alarm transitions to the OK state.',
+    ),
+    unit: Optional[str] = Field(
+        None,
+        description='The unit of the metric associated with the alarm.',
+    ),
 ):
     """Route for put_metric_alarm API."""
     return await alarm_service.put_metric_alarm(
@@ -157,7 +280,10 @@ async def put_metric_alarm_route(
 async def delete_alarms_route(
     ctx: Context,
     mcp,
-    alarm_names: List[str],
+    alarm_names: List[str] = Field(
+        ...,
+        description='The names of the alarms to delete.',
+    ),
 ):
     """Route for delete_alarms API."""
     return await alarm_service.delete_alarms(
@@ -168,7 +294,10 @@ async def delete_alarms_route(
 async def disable_alarm_actions_route(
     ctx: Context,
     mcp,
-    alarm_names: List[str],
+    alarm_names: List[str] = Field(
+        ...,
+        description='The names of the alarms to disable actions for.',
+    ),
 ):
     """Route for disable_alarm_actions API."""
     return await alarm_service.disable_alarm_actions(
@@ -179,7 +308,10 @@ async def disable_alarm_actions_route(
 async def enable_alarm_actions_route(
     ctx: Context,
     mcp,
-    alarm_names: List[str],
+    alarm_names: List[str] = Field(
+        ...,
+        description='The names of the alarms to enable actions for.',
+    ),
 ):
     """Route for enable_alarm_actions API."""
     return await alarm_service.enable_alarm_actions(
@@ -190,10 +322,22 @@ async def enable_alarm_actions_route(
 async def set_alarm_state_route(
     ctx: Context,
     mcp,
-    alarm_name: str,
-    state_value: str,
-    state_reason: str,
-    state_reason_data: Optional[str] = None,
+    alarm_name: str = Field(
+        ...,
+        description='The name of the alarm.',
+    ),
+    state_value: str = Field(
+        ...,
+        description='The value of the state. Possible values: OK, ALARM, INSUFFICIENT_DATA.',
+    ),
+    state_reason: str = Field(
+        ...,
+        description='The reason that this alarm is set to this state.',
+    ),
+    state_reason_data: Optional[str] = Field(
+        None,
+        description='The reason data (JSON string) that this alarm is set to this state.',
+    ),
 ):
     """Route for set_alarm_state API."""
     return await alarm_service.set_alarm_state(
