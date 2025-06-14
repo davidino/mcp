@@ -83,7 +83,7 @@ class DashboardsTool:
                     ctx,
                     dashboard_names=dashboard_names,
                 )
-            elif operation == DashboardsOperation.GET_DASHBOARD:
+            if operation == DashboardsOperation.GET_DASHBOARD:
                 if not dashboard_name:
                     raise ValueError("dashboard_name is required for get_dashboard operation")
                 
@@ -91,13 +91,13 @@ class DashboardsTool:
                     ctx,
                     dashboard_name=dashboard_name,
                 )
-            elif operation == DashboardsOperation.LIST_DASHBOARDS:
+            if operation == DashboardsOperation.LIST_DASHBOARDS:
                 return await self._list_dashboards(
                     ctx,
                     dashboard_name_prefix=dashboard_name_prefix,
                     next_token=next_token,
                 )
-            elif operation == DashboardsOperation.PUT_DASHBOARD:
+            if operation == DashboardsOperation.PUT_DASHBOARD:
                 if not dashboard_name or dashboard_body is None:
                     raise ValueError("dashboard_name and dashboard_body are required for put_dashboard operation")
                 

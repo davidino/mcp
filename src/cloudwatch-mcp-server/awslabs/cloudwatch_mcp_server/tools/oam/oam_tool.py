@@ -99,7 +99,7 @@ class OAMTool:
                     max_results=max_results,
                     next_token=next_token,
                 )
-            elif operation == OAMOperation.GET_SINK:
+            if operation == OAMOperation.GET_SINK:
                 if not sink_identifier:
                     raise ValueError("sink_identifier is required for get_sink operation")
                 
@@ -107,7 +107,7 @@ class OAMTool:
                     ctx,
                     sink_identifier=sink_identifier,
                 )
-            elif operation == OAMOperation.CREATE_SINK:
+            if operation == OAMOperation.CREATE_SINK:
                 if not name:
                     raise ValueError("name is required for create_sink operation")
                 
@@ -117,7 +117,7 @@ class OAMTool:
                     alias=alias,
                     tags=tags,
                 )
-            elif operation == OAMOperation.UPDATE_SINK:
+            if operation == OAMOperation.UPDATE_SINK:
                 if not sink_identifier or not alias:
                     raise ValueError("sink_identifier and alias are required for update_sink operation")
                 
@@ -126,7 +126,7 @@ class OAMTool:
                     sink_identifier=sink_identifier,
                     alias=alias,
                 )
-            elif operation == OAMOperation.DELETE_SINK:
+            if operation == OAMOperation.DELETE_SINK:
                 if not sink_identifier:
                     raise ValueError("sink_identifier is required for delete_sink operation")
                 
@@ -134,14 +134,14 @@ class OAMTool:
                     ctx,
                     sink_identifier=sink_identifier,
                 )
-            elif operation == OAMOperation.LIST_LINKS:
+            if operation == OAMOperation.LIST_LINKS:
                 return await self._list_links(
                     ctx,
                     sink_identifier=sink_identifier,
                     max_results=max_results,
                     next_token=next_token,
                 )
-            elif operation == OAMOperation.GET_LINK:
+            if operation == OAMOperation.GET_LINK:
                 if not link_identifier:
                     raise ValueError("link_identifier is required for get_link operation")
                 
@@ -149,7 +149,7 @@ class OAMTool:
                     ctx,
                     link_identifier=link_identifier,
                 )
-            elif operation == OAMOperation.CREATE_LINK:
+            if operation == OAMOperation.CREATE_LINK:
                 if not sink_identifier or not label or not resource_types:
                     raise ValueError("sink_identifier, label, and resource_types are required for create_link operation")
                 
@@ -160,7 +160,7 @@ class OAMTool:
                     resource_types=resource_types,
                     tags=tags,
                 )
-            elif operation == OAMOperation.UPDATE_LINK:
+            if operation == OAMOperation.UPDATE_LINK:
                 if not link_identifier or not resource_types:
                     raise ValueError("link_identifier and resource_types are required for update_link operation")
                 
@@ -169,7 +169,7 @@ class OAMTool:
                     link_identifier=link_identifier,
                     resource_types=resource_types,
                 )
-            elif operation == OAMOperation.DELETE_LINK:
+            if operation == OAMOperation.DELETE_LINK:
                 if not link_identifier:
                     raise ValueError("link_identifier is required for delete_link operation")
                 
@@ -177,7 +177,7 @@ class OAMTool:
                     ctx,
                     link_identifier=link_identifier,
                 )
-            elif operation == OAMOperation.LIST_ATTACHED_LINKS:
+            if operation == OAMOperation.LIST_ATTACHED_LINKS:
                 if not sink_identifier:
                     raise ValueError("sink_identifier is required for list_attached_links operation")
                 

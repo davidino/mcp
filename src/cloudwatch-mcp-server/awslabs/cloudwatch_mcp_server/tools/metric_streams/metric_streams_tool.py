@@ -100,7 +100,7 @@ class MetricStreamsTool:
                     ctx,
                     name=name,
                 )
-            elif operation == MetricStreamsOperation.GET_METRIC_STREAM:
+            if operation == MetricStreamsOperation.GET_METRIC_STREAM:
                 if not name:
                     raise ValueError("name is required for get_metric_stream operation")
                 
@@ -108,13 +108,13 @@ class MetricStreamsTool:
                     ctx,
                     name=name,
                 )
-            elif operation == MetricStreamsOperation.LIST_METRIC_STREAMS:
+            if operation == MetricStreamsOperation.LIST_METRIC_STREAMS:
                 return await self._list_metric_streams(
                     ctx,
                     next_token=next_token,
                     max_results=max_results,
                 )
-            elif operation == MetricStreamsOperation.PUT_METRIC_STREAM:
+            if operation == MetricStreamsOperation.PUT_METRIC_STREAM:
                 if not name or not firehose_arn or not role_arn or not output_format:
                     raise ValueError("name, firehose_arn, role_arn, and output_format are required for put_metric_stream operation")
                 
@@ -129,7 +129,7 @@ class MetricStreamsTool:
                     statistics_configurations=statistics_configurations,
                     include_linked_accounts_metrics=include_linked_accounts_metrics,
                 )
-            elif operation == MetricStreamsOperation.START_METRIC_STREAMS:
+            if operation == MetricStreamsOperation.START_METRIC_STREAMS:
                 if not names:
                     raise ValueError("names is required for start_metric_streams operation")
                 
@@ -137,7 +137,7 @@ class MetricStreamsTool:
                     ctx,
                     names=names,
                 )
-            elif operation == MetricStreamsOperation.STOP_METRIC_STREAMS:
+            if operation == MetricStreamsOperation.STOP_METRIC_STREAMS:
                 if not names:
                     raise ValueError("names is required for stop_metric_streams operation")
                 

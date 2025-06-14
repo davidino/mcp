@@ -157,7 +157,7 @@ class AlarmsTool:
                     max_records=max_records,
                     next_token=next_token,
                 )
-            elif operation == AlarmsOperation.DESCRIBE_ALARMS:
+            if operation == AlarmsOperation.DESCRIBE_ALARMS:
                 return await self._describe_alarms(
                     ctx,
                     alarm_names=alarm_names,
@@ -168,7 +168,7 @@ class AlarmsTool:
                     max_records=max_records,
                     next_token=next_token,
                 )
-            elif operation == AlarmsOperation.DESCRIBE_ALARMS_FOR_METRIC:
+            if operation == AlarmsOperation.DESCRIBE_ALARMS_FOR_METRIC:
                 if not namespace or not metric_name:
                     raise ValueError("namespace and metric_name are required for describe_alarms_for_metric operation")
                 
@@ -180,7 +180,7 @@ class AlarmsTool:
                     statistic=statistic,
                     extended_statistic=extended_statistic,
                 )
-            elif operation == AlarmsOperation.PUT_COMPOSITE_ALARM:
+            if operation == AlarmsOperation.PUT_COMPOSITE_ALARM:
                 if not alarm_name or not alarm_rule:
                     raise ValueError("alarm_name and alarm_rule are required for put_composite_alarm operation")
                 
@@ -194,7 +194,7 @@ class AlarmsTool:
                     insufficient_data_actions=insufficient_data_actions,
                     ok_actions=ok_actions,
                 )
-            elif operation == AlarmsOperation.PUT_METRIC_ALARM:
+            if operation == AlarmsOperation.PUT_METRIC_ALARM:
                 if not alarm_name or not comparison_operator or not evaluation_periods:
                     raise ValueError("alarm_name, comparison_operator, and evaluation_periods are required for put_metric_alarm operation")
                 
@@ -216,7 +216,7 @@ class AlarmsTool:
                     ok_actions=ok_actions,
                     unit=unit,
                 )
-            elif operation == AlarmsOperation.DELETE_ALARMS:
+            if operation == AlarmsOperation.DELETE_ALARMS:
                 if not alarm_names:
                     raise ValueError("alarm_names is required for delete_alarms operation")
                 
@@ -224,7 +224,7 @@ class AlarmsTool:
                     ctx,
                     alarm_names=alarm_names,
                 )
-            elif operation == AlarmsOperation.DISABLE_ALARM_ACTIONS:
+            if operation == AlarmsOperation.DISABLE_ALARM_ACTIONS:
                 if not alarm_names:
                     raise ValueError("alarm_names is required for disable_alarm_actions operation")
                 
@@ -232,7 +232,7 @@ class AlarmsTool:
                     ctx,
                     alarm_names=alarm_names,
                 )
-            elif operation == AlarmsOperation.ENABLE_ALARM_ACTIONS:
+            if operation == AlarmsOperation.ENABLE_ALARM_ACTIONS:
                 if not alarm_names:
                     raise ValueError("alarm_names is required for enable_alarm_actions operation")
                 
@@ -240,7 +240,7 @@ class AlarmsTool:
                     ctx,
                     alarm_names=alarm_names,
                 )
-            elif operation == AlarmsOperation.SET_ALARM_STATE:
+            if operation == AlarmsOperation.SET_ALARM_STATE:
                 if not alarm_name or not state_value or not state_reason:
                     raise ValueError("alarm_name, state_value, and state_reason are required for set_alarm_state operation")
                 

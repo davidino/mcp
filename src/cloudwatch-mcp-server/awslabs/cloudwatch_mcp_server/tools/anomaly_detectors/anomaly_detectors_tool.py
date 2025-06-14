@@ -98,7 +98,7 @@ class AnomalyDetectorsTool:
                     single_metric_anomaly_detector=single_metric_anomaly_detector,
                     metric_math_anomaly_detector=metric_math_anomaly_detector,
                 )
-            elif operation == AnomalyDetectorsOperation.DESCRIBE_ANOMALY_DETECTORS:
+            if operation == AnomalyDetectorsOperation.DESCRIBE_ANOMALY_DETECTORS:
                 return await self._describe_anomaly_detectors(
                     ctx,
                     namespace=namespace,
@@ -108,7 +108,7 @@ class AnomalyDetectorsTool:
                     next_token=next_token,
                     max_results=max_results,
                 )
-            elif operation == AnomalyDetectorsOperation.PUT_ANOMALY_DETECTOR:
+            if operation == AnomalyDetectorsOperation.PUT_ANOMALY_DETECTOR:
                 if not namespace or not metric_name:
                     raise ValueError("namespace and metric_name are required for put_anomaly_detector operation")
                 

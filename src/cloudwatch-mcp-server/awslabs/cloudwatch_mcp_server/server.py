@@ -44,9 +44,9 @@ mcp = FastMCP(
 # Get AWS region from environment
 aws_region: str = os.environ.get('AWS_REGION', 'us-east-1')
 
-# Register all tools
-def register_tools():
-    """Register all tools with the MCP server."""
+def main():
+    """Run the MCP server."""
+    # Register all tools
     logs_tool = CloudWatchLogsTool(region_name=aws_region)
     logs_tool.register(mcp)
     
@@ -73,12 +73,6 @@ def register_tools():
     
     metrics_tool = MetricsTool(region_name=aws_region)
     metrics_tool.register(mcp)
-
-
-def main():
-    """Run the MCP server."""
-    # Register all tools
-    register_tools()
     
     # Run the server
     mcp.run()

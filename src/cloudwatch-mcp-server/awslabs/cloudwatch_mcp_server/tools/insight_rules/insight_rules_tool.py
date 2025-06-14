@@ -119,13 +119,13 @@ class InsightRulesTool:
                     ctx,
                     rule_names=rule_names,
                 )
-            elif operation == InsightRulesOperation.DESCRIBE_INSIGHT_RULES:
+            if operation == InsightRulesOperation.DESCRIBE_INSIGHT_RULES:
                 return await self._describe_insight_rules(
                     ctx,
                     max_results=max_results,
                     next_token=next_token,
                 )
-            elif operation == InsightRulesOperation.DISABLE_INSIGHT_RULES:
+            if operation == InsightRulesOperation.DISABLE_INSIGHT_RULES:
                 if not rule_names:
                     raise ValueError("rule_names is required for disable_insight_rules operation")
                 
@@ -133,7 +133,7 @@ class InsightRulesTool:
                     ctx,
                     rule_names=rule_names,
                 )
-            elif operation == InsightRulesOperation.ENABLE_INSIGHT_RULES:
+            if operation == InsightRulesOperation.ENABLE_INSIGHT_RULES:
                 if not rule_names:
                     raise ValueError("rule_names is required for enable_insight_rules operation")
                 
@@ -141,7 +141,7 @@ class InsightRulesTool:
                     ctx,
                     rule_names=rule_names,
                 )
-            elif operation == InsightRulesOperation.GET_INSIGHT_RULE_REPORT:
+            if operation == InsightRulesOperation.GET_INSIGHT_RULE_REPORT:
                 if not rule_name or not start_time or not end_time or not period:
                     raise ValueError("rule_name, start_time, end_time, and period are required for get_insight_rule_report operation")
                 
@@ -155,7 +155,7 @@ class InsightRulesTool:
                     metrics=metrics,
                     order_by=order_by,
                 )
-            elif operation == InsightRulesOperation.LIST_MANAGED_INSIGHT_RULES:
+            if operation == InsightRulesOperation.LIST_MANAGED_INSIGHT_RULES:
                 if not resource_arn:
                     raise ValueError("resource_arn is required for list_managed_insight_rules operation")
                 
@@ -165,7 +165,7 @@ class InsightRulesTool:
                     max_results=max_results,
                     next_token=next_token,
                 )
-            elif operation == InsightRulesOperation.PUT_INSIGHT_RULE:
+            if operation == InsightRulesOperation.PUT_INSIGHT_RULE:
                 if not rule_name or not rule_definition:
                     raise ValueError("rule_name and rule_definition are required for put_insight_rule operation")
                 
@@ -176,7 +176,7 @@ class InsightRulesTool:
                     rule_state=rule_state,
                     tags=tags,
                 )
-            elif operation == InsightRulesOperation.PUT_MANAGED_INSIGHT_RULES:
+            if operation == InsightRulesOperation.PUT_MANAGED_INSIGHT_RULES:
                 if not managed_rules:
                     raise ValueError("managed_rules is required for put_managed_insight_rules operation")
                 

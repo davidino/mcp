@@ -69,7 +69,7 @@ class TagsTool:
                     ctx,
                     resource_arn=resource_arn,
                 )
-            elif operation == TagsOperation.TAG_RESOURCE:
+            if operation == TagsOperation.TAG_RESOURCE:
                 if not tags:
                     raise ValueError("tags is required for tag_resource operation")
                 
@@ -78,7 +78,7 @@ class TagsTool:
                     resource_arn=resource_arn,
                     tags=tags,
                 )
-            elif operation == TagsOperation.UNTAG_RESOURCE:
+            if operation == TagsOperation.UNTAG_RESOURCE:
                 if not tag_keys:
                     raise ValueError("tag_keys is required for untag_resource operation")
                 

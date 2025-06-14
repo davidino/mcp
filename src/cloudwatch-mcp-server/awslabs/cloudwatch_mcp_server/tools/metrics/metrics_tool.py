@@ -114,7 +114,7 @@ class MetricsTool:
                     dimensions=dimensions,
                     max_items=max_items,
                 )
-            elif operation == MetricsOperation.GET_METRIC_DATA:
+            if operation == MetricsOperation.GET_METRIC_DATA:
                 if not metric_data_queries or not start_time or not end_time:
                     raise ValueError("metric_data_queries, start_time, and end_time are required for get_metric_data operation")
                 
@@ -126,7 +126,7 @@ class MetricsTool:
                     scan_by=scan_by,
                     max_datapoints=max_datapoints,
                 )
-            elif operation == MetricsOperation.GET_METRIC_STATISTICS:
+            if operation == MetricsOperation.GET_METRIC_STATISTICS:
                 if not namespace or not metric_name or not start_time or not end_time or not period or not statistics:
                     raise ValueError("namespace, metric_name, start_time, end_time, period, and statistics are required for get_metric_statistics operation")
                 
@@ -141,7 +141,7 @@ class MetricsTool:
                     statistics=statistics,
                     unit=unit,
                 )
-            elif operation == MetricsOperation.PUT_METRIC_DATA:
+            if operation == MetricsOperation.PUT_METRIC_DATA:
                 if not namespace or not metric_data:
                     raise ValueError("namespace and metric_data are required for put_metric_data operation")
                 
@@ -150,7 +150,7 @@ class MetricsTool:
                     namespace=namespace,
                     metric_data=metric_data,
                 )
-            elif operation == MetricsOperation.GET_METRIC_WIDGET_IMAGE:
+            if operation == MetricsOperation.GET_METRIC_WIDGET_IMAGE:
                 if not metric_widget:
                     raise ValueError("metric_widget is required for get_metric_widget_image operation")
                 
